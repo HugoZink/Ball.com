@@ -116,6 +116,7 @@ services:
     container_name: exampleservice
     depends_on:
       - rabbitmq
+      - sqlserver
     environment:
       - PITSTOP_ENVIRONMENT=Production
 
