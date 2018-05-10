@@ -110,6 +110,15 @@ services:
     environment:
       - PITSTOP_ENVIRONMENT=Production
 
+  exampleservice:
+    image: pitstop/exampleservice:latest
+    build: ExampleService
+    container_name: exampleservice
+    depends_on:
+      - rabbitmq
+    environment:
+      - PITSTOP_ENVIRONMENT=Production
+
   workshopmanagementeventhandler:
     image: pitstop/workshopmanagementeventhandler:latest
     build: WorkshopManagementEventHandler
