@@ -10,6 +10,7 @@
 
         // Commands
         RegisterCustomer,
+		SendSupportMessage,
         RegisterVehicle,
         PlanMaintenanceJob,
         FinishMaintenanceJob,
@@ -17,6 +18,7 @@
         // Events
         DayHasPassed,
         CustomerRegistered,
+		SupportMessageSent,
         VehicleRegistered,
         WorkshopPlanningCreated,
         MaintenanceJobPlanned,
