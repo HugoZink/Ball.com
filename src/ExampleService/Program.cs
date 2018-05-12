@@ -28,8 +28,6 @@ namespace Pitstop.ExampleService
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
             // get configuration
             var configSection = Config.GetSection("RabbitMQ");
             string host = configSection["Host"];
