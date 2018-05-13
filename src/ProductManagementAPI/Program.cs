@@ -10,18 +10,8 @@ namespace ProductManagementAPI
     {
         public static void Main(string[] args)
         {
-			var host = BuildWebHost(args);
-
-			using (var scope = host.Services.CreateScope())
-			{
-				var services = scope.ServiceProvider;
-
-				var context = services.GetRequiredService<ProductDbContext>();
-				ProductDbSeeder.Seed(context);
-			}
-
-			host.Run();
-        }
+			BuildWebHost(args).Run();
+		}
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)

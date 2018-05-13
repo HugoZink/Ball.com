@@ -9,15 +9,22 @@ namespace ProductManagementAPI.Infrastructure.Database
 {
     public class ProductDbSeeder
     {
-		public static void Seed(ProductDbContext dbContext)
+		private ProductDbContext _dbContext;
+
+		public ProductDbSeeder(ProductDbContext dbContext)
 		{
-			if (!dbContext.Products.Any())
+			_dbContext = dbContext;
+		}
+
+		public async Task Seed()
+		{
+			if (!_dbContext.Products.Any())
 			{
 
-				dbContext.Database.EnsureCreated();
+				_dbContext.Database.EnsureCreated();
 
 				// Look for Any existing Data
-				if (dbContext.Products.Any())
+				if (_dbContext.Products.Any())
 				{
 					return; // Database has been Seeded
 				}
@@ -31,12 +38,9 @@ namespace ProductManagementAPI.Infrastructure.Database
 
 				};
 
-				foreach (var product in products)
-				{
-					dbContext.Products.Add(product);
-				}
+				_dbContext.AddRange(products);
 
-				dbContext.SaveChanges();
+				await _dbContext.SaveChangesAsync();
 			}
 		}
 	}

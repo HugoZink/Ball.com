@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pitstop.Infrastructure.Messaging;
-using ProductManagementAPI.Database;
+using ProductManagementAPI.Infrastructure.Commands;
+using ProductManagementAPI.Infrastructure.Events;
 using ProductManagementAPI.Models;
 using ProductManagementAPI.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace ProductManagementAPI.Controllers
 {
-    [Produces("application/json")]
+	[Produces("application/json")]
     [Route("api/products")]
     public class ProductsController : Controller
     {
@@ -29,7 +27,7 @@ namespace ProductManagementAPI.Controllers
 
 		// GET: api/Products
 		[HttpGet]
-		public async Task<IActionResult> GetAll()
+		public async Task<IActionResult> GetAllAsync()
 		{
 			var products = await _productRepository.GetAllAsync();
 
@@ -37,8 +35,8 @@ namespace ProductManagementAPI.Controllers
 		}
 
 		// GET: api/Products/5
-		[HttpGet("{id}", Name = "Get")]
-		public async Task<IActionResult> Get(string id)
+		[HttpGet("{id}", Name = "GetById")]
+		public async Task<IActionResult> GetAsync(string id)
 		{
 			var products = _productRepository.GetAsync(id);
 
@@ -52,30 +50,44 @@ namespace ProductManagementAPI.Controllers
         
         // POST: api/Products
         [HttpPost]
-        public async Task<IActionResult> Post ([FromBody]Product product)
+        public async Task<IActionResult> PostAsync ([FromBody]AddProduct command)
         {
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
+			// save new product
+			Product product = Mapper.Map<Product>(command);
 			var newP = await _productRepository.CreateAsync(product);
 
-			return Ok(newP);
+			// send event
+			NewProductAdded e = Mapper.Map<NewProductAdded>(command);
+			await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+
+			// return result
+			return CreatedAtRoute("GetById", new {id = newP.Id }, newP);
 		}
         
         // PUT: api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody]Product product)
+        public async Task<IActionResult> PutAsync(string id, [FromBody]Product product)
         {
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			var updatedP = await _productRepository.UpdateAsync(product);
+			var toBeUpdatedProduct = _productRepository.GetAsync(id);
 
-			return Ok(updatedP);
+			if (toBeUpdatedProduct == null)
+			{
+				return NotFound();
+			}
+
+			await _productRepository.UpdateAsync(product);
+
+			return NoContent();
 		}
     }
 }

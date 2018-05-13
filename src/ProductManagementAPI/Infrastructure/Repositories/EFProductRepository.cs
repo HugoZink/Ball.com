@@ -18,12 +18,7 @@ namespace ProductManagementAPI.Repositories
 			_context = context;
 		}
 
-		public IEnumerable<Product> Products => _context.Products;
-
-		public async Task<IEnumerable<Product>> GetAllAsync()
-		{
-			return await _context.Products.ToListAsync();
-		}
+		public async Task<IEnumerable<Product>> GetAllAsync() => await _context.Products.ToListAsync();
 
 		public async Task<Product> GetAsync(string id)
 		{
@@ -39,18 +34,20 @@ namespace ProductManagementAPI.Repositories
 
 		public async Task<Product> UpdateAsync(Product product)
 		{
-			var exist = await GetAsync(product.Id);
 
 			var updatedP = _context.Products.Update(product);
 
+			var exist = await GetAsync(product.Id);
+
 			await _context.SaveChangesAsync();
 
-			return updatedP.Entity;
+			return exist;
 		}
 
 		public async Task<Product> CreateAsync(Product product)
 		{
 			var newP = await _context.Products.AddAsync(product);
+
 			await _context.SaveChangesAsync();
 
 			return newP.Entity;

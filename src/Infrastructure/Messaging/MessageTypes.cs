@@ -11,14 +11,16 @@
         // Commands
         RegisterCustomer,
         RegisterVehicle,
-        PlanMaintenanceJob,
+        AddProduct,
+		PlanMaintenanceJob,
         FinishMaintenanceJob,
 
         // Events
         DayHasPassed,
         CustomerRegistered,
         VehicleRegistered,
-        WorkshopPlanningCreated,
+        NewProductAdded,
+		WorkshopPlanningCreated,
         MaintenanceJobPlanned,
         MaintenanceJobFinished
     }
