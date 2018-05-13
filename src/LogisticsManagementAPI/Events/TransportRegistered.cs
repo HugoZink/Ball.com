@@ -18,7 +18,7 @@ namespace LogisticsManagementAPI.Events
 
         public TransportRegistered(Guid messageId, string transportId, string companyName,
             string typeOfShipment, string countryOfDestination, string description,
-            decimal weightInKgMax, decimal shippingCost, MessageTypes messageType) : base(messageId, messageType)
+            decimal weightInKgMax, decimal shippingCost) : base(messageId, MessageTypes.TransportRegistered)
         {
             TransportId = transportId;
             CompanyName = companyName;

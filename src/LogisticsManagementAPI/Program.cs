@@ -16,17 +16,7 @@ namespace LogisticsManagementAPI
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
-
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-
-                var context = services.GetRequiredService<LogisticsManagementDbContext>();
-                LogisticsManagementDbInitializer.Seed(context);
-            }
-
-            host.Run();
+            BuildWebHost(args).Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

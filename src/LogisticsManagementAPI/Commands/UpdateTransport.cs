@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogisticsManagementAPI.Commands
 {
-    public class RegisterTransport : Command
+    public class UpdateTransport : Command
     {
         public readonly string TransportId;
         public readonly string CompanyName;
@@ -16,9 +16,9 @@ namespace LogisticsManagementAPI.Commands
         public readonly decimal WeightInKgMax;
         public readonly decimal ShippingCost;
 
-        public RegisterTransport(Guid messageId, string transportId, string companyName,
+        public UpdateTransport(Guid messageId, string transportId, string companyName,
             string typeOfShipment, string countryOfDestination, string description,
-            decimal weightInKgMax, decimal shippingCost) : base(messageId, MessageTypes.RegisterTransport)
+            decimal weightInKgMax, decimal shippingCost) : base(messageId, MessageTypes.UpdateTransport)
         {
             TransportId = transportId;
             CompanyName = companyName;

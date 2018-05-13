@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LogisticsManagementAPI.Commands;
 using LogisticsManagementAPI.DataAccess;
+using LogisticsManagementAPI.Events;
+using LogisticsManagementAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pitstop.Infrastructure.Messaging;
@@ -30,36 +33,98 @@ namespace LogisticsManagementAPI.Controllers
         }
 
         // GET api/transports/5
-        [HttpGet("{transportId}")]
+        [HttpGet]
+        [Route("{transportId}", Name = "GetTransportById")]
         public async Task<IActionResult> GetAsync(string transportId)
         {
             var transport = await _dbContext.Transports.FirstOrDefaultAsync(t => t.TransportId == transportId);
 
-            if (transport == null)
+            if (transport != null)
             {
-                return NotFound();
+                return Ok(transport);
             }
 
-            return Ok(transport);
+            return NotFound();
         }
 
-        // POST api/values
+        // POST api/transports
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] RegisterTransport command)
         {
-            return null;
+            if (ModelState.IsValid)
+            {
+                // Insert Transport
+                Transport transport = Mapper.Map<Transport>(command);
+                _dbContext.Transports.Add(transport);
+                await _dbContext.SaveChangesAsync();
+
+                // Send Event
+                TransportRegistered e = Mapper.Map<TransportRegistered>(command);
+                await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+
+                return CreatedAtRoute("GetTransportById", new { transportId = transport.TransportId }, transport);
+            }
+
+            return BadRequest();
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        // PUT api/transports/5
+        [HttpPut("{transportId}")]
+        public async Task<IActionResult> PutAsync(string transportId, [FromBody] UpdateTransport command)
         {
+            if (ModelState.IsValid)
+            {
+                Transport transport = Mapper.Map<Transport>(command);
+                transport = await _dbContext.Transports.FirstOrDefaultAsync(t => t.TransportId == transportId);
+
+                if (transport != null)
+                {
+                    // Update Transport
+                    transport.CompanyName = command.CompanyName;
+                    transport.TypeOfShipment = command.TypeOfShipment;
+                    transport.CountryOfDestination = command.CountryOfDestination;
+                    transport.Description = command.Description;
+                    transport.WeightInKgMax = command.WeightInKgMax;
+                    transport.ShippingCost = command.ShippingCost;
+                    await _dbContext.SaveChangesAsync();
+
+                    // Send Event
+                    TransportUpdated e = Mapper.Map<TransportUpdated>(command);
+                    await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+
+                    return CreatedAtRoute("GetTransportById", new { transportId = transport.TransportId }, transport);
+                }
+
+                return NotFound();
+            }
+
+            return BadRequest();
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE api/transports/5
+        [HttpDelete("{transportId}")]
+        public async Task<IActionResult> DeleteAsync(string transportId)
         {
+            RemoveTransport command = new RemoveTransport(Guid.Empty, transportId);
+
+            Transport transport = Mapper.Map<Transport>(command);
+            transport = await _dbContext.Transports.FirstOrDefaultAsync(t => t.TransportId == transportId);
+
+            if (transport != null)
+            {
+                // Delete Transport
+                _dbContext.Transports.Attach(transport);
+                _dbContext.Transports.Remove(transport);
+                await _dbContext.SaveChangesAsync();
+
+                // Send Event
+                TransportRemoved e = Mapper.Map<TransportRemoved>(command);
+                await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+
+                return CreatedAtRoute("GetTransportById", new { transportId = transport.TransportId }, transport);
+            }
+
+            return NotFound();
         }
     }
 }

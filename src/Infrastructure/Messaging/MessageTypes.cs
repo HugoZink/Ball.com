@@ -5,21 +5,37 @@
     /// </summary>
     public enum MessageTypes
     {
-        // General
-        Unknown, 
+        // General Comamnds or Events
+        Unknown,
 
-        // Commands
+        // Customer Commands and Events
         RegisterCustomer,
+
+        CustomerRegistered,
+
+        // Logistics Commands and Events
+        RegisterTransport,
+        UpdateTransport,
+        RemoveTransport,
+
+        TransportRegistered,
+        TransportUpdated,
+        TransportRemoved,
+
+        // Vehicle Commands and Events
         RegisterVehicle,
+
+        VehicleRegistered,
+
+        // Workshop Commands and Events
         PlanMaintenanceJob,
         FinishMaintenanceJob,
 
-        // Events
-        DayHasPassed,
-        CustomerRegistered,
-        VehicleRegistered,
         WorkshopPlanningCreated,
         MaintenanceJobPlanned,
-        MaintenanceJobFinished
+        MaintenanceJobFinished,
+
+        // Time Events
+        DayHasPassed,
     }
 }

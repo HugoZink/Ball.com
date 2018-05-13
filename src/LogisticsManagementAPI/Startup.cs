@@ -50,7 +50,9 @@ namespace LogisticsManagementAPI
             string host = configSection["Host"];
             string userName = configSection["UserName"];
             string password = configSection["Password"];
-            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
+
+            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
+            services.AddTransient<LogisticsManagementDbInitializer>();
 
             // Add framework services.
             services.AddMvc();
@@ -63,7 +65,7 @@ namespace LogisticsManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, LogisticsManagementDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, LogisticsManagementDbInitializer dbInit)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -87,6 +89,8 @@ namespace LogisticsManagementAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            dbInit.Seed().Wait();
         }
 
         private void SetupAutoMapper()
@@ -94,12 +98,24 @@ namespace LogisticsManagementAPI
             // setup automapper
             Mapper.Initialize(cfg =>
             {
-                // Add CRUD Commands and Events
+                // Map CRUD Commands and Events
                 cfg.CreateMap<RegisterTransport, Transport>();
+                cfg.CreateMap<UpdateTransport, Transport>();
+                cfg.CreateMap<RemoveTransport, Transport>();
+
                 cfg.CreateMap<Transport, RegisterTransport>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
+                cfg.CreateMap<Transport, UpdateTransport>()
+                    .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
+                cfg.CreateMap<Transport, RemoveTransport>()
+                    .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
+
                 cfg.CreateMap<RegisterTransport, TransportRegistered>()
-                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                    .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
+                cfg.CreateMap<UpdateTransport, TransportUpdated>()
+                    .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
+                cfg.CreateMap<RemoveTransport, TransportRemoved>()
+                    .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
             });
         }
     }
