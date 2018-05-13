@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pitstop.Infrastructure.Messaging;
+using ProductManagementAPI.Repositories;
 
 namespace ProductManagementAPI
 {
@@ -41,6 +42,7 @@ namespace ProductManagementAPI
 	        string userName = configSection["UserName"];
 	        string password = configSection["Password"];
 	        services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
+	        services.AddTransient<IProductRepository, EFProductRepository>();
 
 			services.AddMvc();
         }

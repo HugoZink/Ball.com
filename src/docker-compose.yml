@@ -74,7 +74,7 @@ services:
 #  auditlogservice:
 #    image: pitstop/auditlogservice:latest
 #    build: AuditlogService
-#    container_name: auditlogservice
+#    container_name: auditlogservice 
 #    depends_on:
 #      - rabbitmq
 #    environment:
@@ -109,16 +109,6 @@ services:
 #      - rabbitmq
 #    environment:
 #      - PITSTOP_ENVIRONMENT=Production
-
-  exampleservice:
-    image: pitstop/exampleservice:latest
-    build: ExampleService
-    container_name: exampleservice
-    depends_on:
-      - rabbitmq
-      - sqlserver
-    environment:
-      - PITSTOP_ENVIRONMENT=Production
 
   productmanagementapi:
     image: pitstop/productmanagementapi:latest
