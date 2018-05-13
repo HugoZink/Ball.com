@@ -12,9 +12,9 @@ namespace ProductManagementAPI.Repositories
 
 		Task<Product> GetAsync(int id);
 
-		Task UpdateAsync(Product product);
+		Task<Product> UpdateAsync(Product product);
 
-		Task CreateAsync(Product product);
+		Task<Product> CreateAsync(Product product);
 
 	}
 }

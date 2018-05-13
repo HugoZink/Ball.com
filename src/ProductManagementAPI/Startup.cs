@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pitstop.Infrastructure.Messaging;
+using ProductManagementAPI.Database;
+using ProductManagementAPI.Infrastructure.Database;
 using ProductManagementAPI.Repositories;
 
 namespace ProductManagementAPI
@@ -36,8 +39,12 @@ namespace ProductManagementAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-	        // add messagepublisher classes
-	        var configSection = Configuration.GetSection("RabbitMQ");
+			// add DBContext classes
+			var sqlConnectionString = Configuration.GetConnectionString("ProductManagementCN");
+			services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(sqlConnectionString));
+
+			// add messagepublisher classes
+			var configSection = Configuration.GetSection("RabbitMQ");
 	        string host = configSection["Host"];
 	        string userName = configSection["UserName"];
 	        string password = configSection["Password"];
@@ -48,7 +55,7 @@ namespace ProductManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProductDbContext _context)
         {
             if (env.IsDevelopment())
             {
@@ -56,6 +63,8 @@ namespace ProductManagementAPI
             }
 
             app.UseMvc();
+
+			ProductDbSeeder.Seed(_context);
         }
     }
 }

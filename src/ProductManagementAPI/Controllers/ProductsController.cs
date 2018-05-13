@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +42,11 @@ namespace ProductManagementAPI.Controllers
 		{
 			var products = _productRepository.GetAsync(id);
 
+			if(products == null)
+			{
+				return NotFound();
+			}
+
 			return Ok(await products);
 		}
         
@@ -52,9 +59,9 @@ namespace ProductManagementAPI.Controllers
 				return BadRequest(ModelState);
 			}
 
-			await _productRepository.CreateAsync(product);
+			var newP = await _productRepository.CreateAsync(product);
 
-			return Ok();
+			return Ok(newP);
 		}
         
         // PUT: api/Products/5
@@ -66,9 +73,9 @@ namespace ProductManagementAPI.Controllers
 				return BadRequest(ModelState);
 			}
 
-			await _productRepository.UpdateAsync(product);
+			var updatedP = await _productRepository.UpdateAsync(product);
 
-			return Ok();
+			return Ok(updatedP);
 		}
     }
 }

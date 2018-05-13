@@ -112,7 +112,9 @@ services:
 
   productmanagementapi:
     image: pitstop/productmanagementapi:latest
-    build: ProductManagementAPI
+    build:
+      context: ./
+      dockerfile: Dockerfile.product
     container_name: productmanagementapi
     depends_on:
       - rabbitmq

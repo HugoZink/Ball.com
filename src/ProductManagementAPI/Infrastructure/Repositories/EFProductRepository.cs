@@ -27,27 +27,33 @@ namespace ProductManagementAPI.Repositories
 
 		public async Task<Product> GetAsync(int id)
 		{
-			return await _context.Products.FirstOrDefaultAsync(s => s.Id == id);
-		}
+			var product = await _context.Products.FirstOrDefaultAsync(s => s.Id == id);
 
-		public async Task UpdateAsync(Product product)
-		{
-			var exist = await GetAsync(product.Id);
-
-			if (exist == null)
+			if (product == null)
 			{
 				throw new KeyNotFoundException();
 			}
 
-			_context.Products.Update(product);
-
-			await _context.SaveChangesAsync();
+			return product;
 		}
 
-		public async Task CreateAsync(Product product)
+		public async Task<Product> UpdateAsync(Product product)
 		{
-			await _context.Products.AddAsync(product);
+			var exist = await GetAsync(product.Id);
+
+			var updatedP = _context.Products.Update(product);
+
 			await _context.SaveChangesAsync();
+
+			return updatedP.Entity;
+		}
+
+		public async Task<Product> CreateAsync(Product product)
+		{
+			var newP = await _context.Products.AddAsync(product);
+			await _context.SaveChangesAsync();
+
+			return newP.Entity;
 		}
 	}
 }
