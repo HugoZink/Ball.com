@@ -25,7 +25,7 @@ namespace ProductManagementAPI.Repositories
 			return await _context.Products.ToListAsync();
 		}
 
-		public async Task<Product> GetAsync(int id)
+		public async Task<Product> GetAsync(string id)
 		{
 			var product = await _context.Products.FirstOrDefaultAsync(s => s.Id == id);
 

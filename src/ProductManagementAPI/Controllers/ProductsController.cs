@@ -14,7 +14,7 @@ using ProductManagementAPI.Repositories;
 namespace ProductManagementAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Products")]
+    [Route("api/products")]
     public class ProductsController : Controller
     {
 
@@ -29,16 +29,16 @@ namespace ProductManagementAPI.Controllers
 
 		// GET: api/Products
 		[HttpGet]
-		public async Task<IActionResult> GetAllAsync()
+		public async Task<IActionResult> GetAll()
 		{
-			var products = _productRepository.GetAllAsync();
+			var products = await _productRepository.GetAllAsync();
 
-			return Ok(await products);
+			return Ok(products);
 		}
 
 		// GET: api/Products/5
 		[HttpGet("{id}", Name = "Get")]
-		public async Task<IActionResult> Get(int id)
+		public async Task<IActionResult> Get(string id)
 		{
 			var products = _productRepository.GetAsync(id);
 
@@ -66,7 +66,7 @@ namespace ProductManagementAPI.Controllers
         
         // PUT: api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody]Product product)
+        public async Task<IActionResult> Put(string id, [FromBody]Product product)
         {
 			if (!ModelState.IsValid)
 			{

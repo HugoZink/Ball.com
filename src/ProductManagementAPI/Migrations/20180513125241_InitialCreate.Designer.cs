@@ -6,12 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using ProductManagementAPI.Database;
+using ProductManagementAPI.Models;
 using System;
 
 namespace ProductManagementAPI.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20180513113418_InitialCreate")]
+    [Migration("20180513125241_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,14 +24,14 @@ namespace ProductManagementAPI.Migrations
 
             modelBuilder.Entity("ProductManagementAPI.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
 
                     b.Property<decimal>("Price");
 
-                    b.Property<string>("Type");
+                    b.Property<int>("Type");
 
                     b.HasKey("Id");
 

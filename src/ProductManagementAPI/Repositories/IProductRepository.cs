@@ -10,7 +10,7 @@ namespace ProductManagementAPI.Repositories
     {
 		Task<IEnumerable<Product>> GetAllAsync();
 
-		Task<Product> GetAsync(int id);
+		Task<Product> GetAsync(string id);
 
 		Task<Product> UpdateAsync(Product product);
 

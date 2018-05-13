@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using ProductManagementAPI.Database;
+using ProductManagementAPI.Models;
 using System;
 
 namespace ProductManagementAPI.Migrations
@@ -22,14 +23,14 @@ namespace ProductManagementAPI.Migrations
 
             modelBuilder.Entity("ProductManagementAPI.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
 
                     b.Property<decimal>("Price");
 
-                    b.Property<string>("Type");
+                    b.Property<int>("Type");
 
                     b.HasKey("Id");
 

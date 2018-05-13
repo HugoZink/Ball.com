@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using ProductManagementAPI.Database;
+using ProductManagementAPI.Infrastructure.Database;
 
 namespace ProductManagementAPI
 {
@@ -7,7 +10,17 @@ namespace ProductManagementAPI
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+			var host = BuildWebHost(args);
+
+			using (var scope = host.Services.CreateScope())
+			{
+				var services = scope.ServiceProvider;
+
+				var context = services.GetRequiredService<ProductDbContext>();
+				ProductDbSeeder.Seed(context);
+			}
+
+			host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
