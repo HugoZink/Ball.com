@@ -80,7 +80,7 @@ namespace ProductManagementAPI
 			// Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
 			app.UseSwaggerUI(c =>
 			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "VehicleManagement API - v1");
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductManagement API - v1");
 			});
 
 			seeder.Seed().Wait();
