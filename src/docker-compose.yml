@@ -1,66 +1,60 @@
 version: '3'
 services:
+    sqlserver:
+        image: 'microsoft/mssql-server-linux:latest'
+        container_name: sqlserver
+        volumes:
+            - 'sqlserverdata:/var/opt/mssql'
+        ports:
+            - '1434:1433'
+        environment:
+            ACCEPT_EULA: Y
+            MSSQL_PID: Developer
+            SA_PASSWORD: 8jkGh47hnDw89Haq8LN2
+    rabbitmq:
+        image: 'rabbitmq:3-management'
+        container_name: rabbitmq
+        volumes:
+            - 'rabbitmqdata:/var/lib/rabbitmq'
+        ports:
+            - '15672:15672'
+            - '5672:5672'
+        environment:
+            RABBITMQ_DEFAULT_USER: rabbitmquser
+            RABBITMQ_DEFAULT_PASS: DEBmbwkSrzy9D1T9cJfa
+    
+    customermanagementapi:
+        image: pitstop/customermanagementapi:latest
+        build:
+          context: ./
+          dockerfile: Dockerfile.customermanagement
+        container_name: customermanagementapi
+        depends_on:
+          - rabbitmq
+          - sqlserver
+        ports:
+          - "5100:5100"
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Production
+          - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
-  sqlserver:
-    image: microsoft/mssql-server-linux:latest
-    container_name: sqlserver
-    volumes:
-      - sqlserverdata:/var/opt/mssql 
-    ports:
-      - "1434:1433"
-    environment:
-      - ACCEPT_EULA=Y 
-      - MSSQL_PID=Developer
-      - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    volumes:
-      - rabbitmqdata:/var/lib/rabbitmq
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    environment:
-      - RABBITMQ_DEFAULT_USER=rabbitmquser
-      - RABBITMQ_DEFAULT_PASS=DEBmbwkSrzy9D1T9cJfa
-
-  customermanagementapi:
-    image: pitstop/customermanagementapi:latest
-    build:
-      context: ./
-      dockerfile: Dockerfile.customermanagement
-    container_name: customermanagementapi
-    depends_on:
-      - rabbitmq
-      - sqlserver
-    ports:
-      - "5100:5100"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
-
-  invoiceservice:
-    image: pitstop/invoiceservice:latest
-    build: InvoiceService
-    container_name: invoiceservice
-    depends_on:
-      - rabbitmq
-      - sqlserver
-    environment:
-      - PITSTOP_ENVIRONMENT=Production
-
-  timeservice:
-    image: pitstop/timeservice:latest
-    build: TimeService
-    container_name: timeservice
-    depends_on:
-      - rabbitmq
-    environment:
-      - PITSTOP_ENVIRONMENT=Production
-
+    logisticsmanagementapi:
+        image: 'pitstop/logisticsmanagementapi:latest'
+        build: 
+            context: ./
+            dockerfile: Dockerfile.logistics
+        container_name: logisticsmanagementapi
+        depends_on:
+            - rabbitmq
+            - sqlserver
+        ports:
+            - '5300:5300'
+        environment:
+            ASPNETCORE_ENVIRONMENT: Production
+            ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+            
 volumes:
-  sqlserverdata:
-    external: true    
-  rabbitmqdata:
-    external: true
+    sqlserverdata:
+        external: true
+    rabbitmqdata:
+        external: true

@@ -1,27 +1,42 @@
 ﻿namespace Pitstop.Infrastructure.Messaging
 {
-    /// <summary>
-    /// Complete list of message types in the system.
-    /// </summary>
-    public enum MessageTypes
-    {
-        // General
-        Unknown, 
+	/// <summary>
+	/// Complete list of message types in the system.
+	/// </summary>
+	public enum MessageTypes
+	{
+		// General Comamnds or Events
+		Unknown,
 
-        // Commands
-        RegisterCustomer,
-		SendSupportMessage,
-        RegisterVehicle,
-        PlanMaintenanceJob,
-        FinishMaintenanceJob,
-
-        // Events
-        DayHasPassed,
-        CustomerRegistered,
+		// Customer Commands and Events
+		RegisterCustomer,
+		CustomerRegistered,
 		SupportMessageSent,
-        VehicleRegistered,
-        WorkshopPlanningCreated,
-        MaintenanceJobPlanned,
-        MaintenanceJobFinished
-    }
+		SendSupportMessage,
+
+		// Logistics Commands and Events
+		RegisterTransport,
+		UpdateTransport,
+		RemoveTransport,
+
+		TransportRegistered,
+		TransportUpdated,
+		TransportRemoved,
+
+		// Vehicle Commands and Events
+		RegisterVehicle,
+
+		VehicleRegistered,
+
+		// Workshop Commands and Events
+		PlanMaintenanceJob,
+		FinishMaintenanceJob,
+
+		WorkshopPlanningCreated,
+		MaintenanceJobPlanned,
+		MaintenanceJobFinished,
+
+		// Time Events
+		DayHasPassed,
+	}
 }
