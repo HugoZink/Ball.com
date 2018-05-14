@@ -32,9 +32,9 @@ namespace ProductManagementAPI.Infrastructure.Database
 				var products = new Product[]
 				{
 
-				new Product {Name = "Phone", Price = 1.00m, Type = ProductType.Electronic},
-				new Product {Name = "Chair", Price = 2.00m, Type = ProductType.None},
-				new Product {Name = "Dino", Price = 3.00m, Type = ProductType.Toy}
+				new Product {Name = "Phone", Price = 1.00m, WeightKg= 2, Type = ProductType.Electronic},
+				new Product {Name = "Chair", Price = 2.00m, WeightKg= 20, Type = ProductType.None},
+				new Product {Name = "Dino", Price = 3.00m, WeightKg= 1, Type = ProductType.Toy}
 
 				};
 
