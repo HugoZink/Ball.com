@@ -1,0 +1,21 @@
+﻿FROM microsoft/aspnetcore-build:2.0 AS build-env
+WORKDIR /app
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet restore LogisticsManagementAPI/*.csproj
+RUN dotnet publish LogisticsManagementAPI/*.csproj -c Release -o out
+
+# Build runtime image
+FROM microsoft/aspnetcore:2.0
+COPY --from=build-env /app/LogisticsManagementAPI/out .
+
+# Expose ports
+EXPOSE 5300/tcp
+ENV ASPNETCORE_URLS http://*:5300
+
+# Configure environment variables
+ENV WEBSITE_SITE_NAME LogisticsManagementAPI
+
+# Start
+ENTRYPOINT ["dotnet", "LogisticsManagementAPI.dll"]
