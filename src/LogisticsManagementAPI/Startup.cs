@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pitstop.Infrastructure.Messaging;
+using Polly;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace LogisticsManagementAPI
@@ -90,7 +91,15 @@ namespace LogisticsManagementAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            dbInit.Seed().Wait();
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(10, r => TimeSpan.FromSeconds(5), (ex, ts) =>
+                {
+                    Console.WriteLine("Error connecting to SQLServer. Retrying in 5 sec.");
+                }).Execute(() =>
+                {
+                    dbInit.Seed().Wait();
+                });
         }
 
         private void SetupAutoMapper()
