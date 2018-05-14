@@ -12,6 +12,7 @@
         RegisterCustomer,
         RegisterVehicle,
         AddProduct,
+		UpdateProduct,
 		PlanMaintenanceJob,
         FinishMaintenanceJob,
 
@@ -20,6 +21,7 @@
         CustomerRegistered,
         VehicleRegistered,
         NewProductAdded,
+		ProductUpdated,
 		WorkshopPlanningCreated,
         MaintenanceJobPlanned,
         MaintenanceJobFinished

@@ -71,7 +71,7 @@ namespace ProductManagementAPI.Controllers
         
         // PUT: api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(string id, [FromBody]Product product)
+        public async Task<IActionResult> PutAsync(string id, [FromBody]UpdateProduct command)
         {
 			if (!ModelState.IsValid)
 			{
@@ -85,7 +85,12 @@ namespace ProductManagementAPI.Controllers
 				return NotFound();
 			}
 
+			Product product = Mapper.Map<Product>(command);
 			await _productRepository.UpdateAsync(product);
+
+			// send event
+			ProductUpdated e = Mapper.Map<ProductUpdated>(command);
+			await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
 			return NoContent();
 		}
