@@ -78,6 +78,21 @@ services:
         environment:
             ASPNETCORE_ENVIRONMENT: Production
             ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+			
+    productmanagementapi:
+        image: pitstop/productmanagementapi:latest
+        build:
+            context: ./
+            dockerfile: Dockerfile.product
+        container_name: productmanagementapi
+        depends_on:
+           - rabbitmq
+           - sqlserver
+        ports:
+           - "5500:5500"
+        environment:
+           - ASPNETCORE_ENVIRONMENT=Production
+
     # auditlogservice:
     #     image: 'pitstop/auditlogservice:latest'
     #     build: AuditlogService
