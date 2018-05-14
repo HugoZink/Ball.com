@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 namespace ProductManagementAPI.Controllers
 {
 	[Produces("application/json")]
-    [Route("api/products")]
-    public class ProductsController : Controller
-    {
+	[Route("api/products")]
+	public class ProductsController : Controller
+	{
 
 		IMessagePublisher _messagePublisher;
 		private readonly IProductRepository _productRepository;
@@ -40,18 +40,18 @@ namespace ProductManagementAPI.Controllers
 		{
 			var products = _productRepository.GetAsync(id);
 
-			if(products == null)
+			if (products == null)
 			{
 				return NotFound();
 			}
 
 			return Ok(await products);
 		}
-        
-        // POST: api/Products
-        [HttpPost]
-        public async Task<IActionResult> PostAsync ([FromBody]AddProduct command)
-        {
+
+		// POST: api/Products
+		[HttpPost]
+		public async Task<IActionResult> PostAsync([FromBody]AddProduct command)
+		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
@@ -66,13 +66,13 @@ namespace ProductManagementAPI.Controllers
 			await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
 			// return result
-			return CreatedAtRoute("GetById", new {id = newP.Id }, newP);
+			return CreatedAtRoute("GetById", new { id = newP.Id }, newP);
 		}
-        
-        // PUT: api/Products/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(string id, [FromBody]UpdateProduct command)
-        {
+
+		// PUT: api/Products/5
+		[HttpPut("{id}")]
+		public async Task<IActionResult> PutAsync(string id, [FromBody]UpdateProduct command)
+		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
@@ -83,6 +83,11 @@ namespace ProductManagementAPI.Controllers
 			if (toBeUpdatedProduct == null)
 			{
 				return NotFound();
+
+			}
+			else if (command.Id == null)
+			{
+				command.Id = id;
 			}
 
 			Product product = Mapper.Map<Product>(command);
@@ -94,5 +99,5 @@ namespace ProductManagementAPI.Controllers
 
 			return NoContent();
 		}
-    }
+	}
 }

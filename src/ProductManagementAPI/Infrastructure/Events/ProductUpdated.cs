@@ -12,14 +12,16 @@ namespace ProductManagementAPI.Infrastructure.Events
 		public readonly string Id;
 		public readonly string Name;
 		public readonly decimal Price;
+		public readonly float WeightKg;
 		public readonly ProductType Type;
 
-		public ProductUpdated(Guid messageId, string id, string name, decimal price, ProductType type) :
+		public ProductUpdated(Guid messageId, string id, string name, decimal price, float weightkg, ProductType type) :
 			base(messageId, MessageTypes.ProductUpdated)
 		{
 			Id = id;
 			Name = name;
 			Price = price;
+			WeightKg = weightkg;
 			Type = type;
 		}
 	}
