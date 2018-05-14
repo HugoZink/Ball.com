@@ -92,7 +92,10 @@ namespace ProductManagementAPI
 			Mapper.Initialize(cfg =>
 			{
 				cfg.CreateMap<AddProduct, Product>();
+				cfg.CreateMap<UpdateProduct, Product>();
 				cfg.CreateMap<AddProduct, NewProductAdded>()
+					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+				cfg.CreateMap<UpdateProduct, ProductUpdated>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
 			});
 		}

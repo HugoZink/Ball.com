@@ -78,7 +78,7 @@ services:
         environment:
             ASPNETCORE_ENVIRONMENT: Production
             ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
-			
+
     productmanagementapi:
         image: pitstop/productmanagementapi:latest
         build:

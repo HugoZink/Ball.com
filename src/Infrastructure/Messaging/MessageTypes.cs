@@ -30,8 +30,6 @@
         FinishMaintenanceJob,
 
         // Events
-        DayHasPassed,
-        CustomerRegistered,
         VehicleRegistered,
         NewProductAdded,
 		ProductUpdated,
