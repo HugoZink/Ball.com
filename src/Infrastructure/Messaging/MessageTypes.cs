@@ -22,20 +22,22 @@
         TransportUpdated,
         TransportRemoved,
 
-        // Vehicle Commands and Events
-        RegisterVehicle,
-        AddProduct,
-		UpdateProduct,
+		// Vehicle Commands and Events
+		VehicleRegistered,
+		WorkshopPlanningCreated,
+		MaintenanceJobPlanned,
+		MaintenanceJobFinished,
+
+		RegisterVehicle,
 		PlanMaintenanceJob,
         FinishMaintenanceJob,
 
-        // Events
-        VehicleRegistered,
-        NewProductAdded,
+		// Products Commands and Events
+		AddProduct,
+		UpdateProduct,
+
+		NewProductAdded,
 		ProductUpdated,
-		WorkshopPlanningCreated,
-        MaintenanceJobPlanned,
-        MaintenanceJobFinished,
 
         // Time Events
         DayHasPassed,
