@@ -135,8 +135,15 @@ services:
     #     environment:
     #         ASPNETCORE_ENVIRONMENT: Production
     #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+  warehousemanagementapi:
+    image: ${DOCKER_REGISTRY}warehousemanagementapi
+    build:
+      context: .
+      dockerfile: ../WarehouseManagementAPI/Dockerfile
+
 volumes:
     sqlserverdata:
         external: true
     rabbitmqdata:
         external: true
+
