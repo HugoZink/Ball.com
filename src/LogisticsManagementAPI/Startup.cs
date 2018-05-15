@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -41,7 +42,7 @@ namespace LogisticsManagementAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add DbContext Classes
+            // Add DbContext classes
             var sqlConnectionString = Configuration.GetConnectionString("LogisticsManagementCN");
             services.AddDbContext<LogisticsManagementDbContext>(options =>
                 options.UseSqlServer(sqlConnectionString));
@@ -93,10 +94,8 @@ namespace LogisticsManagementAPI
 
             Policy
                 .Handle<Exception>()
-                .WaitAndRetry(10, r => TimeSpan.FromSeconds(5), (ex, ts) =>
-                {
-                    Console.WriteLine("Error connecting to SQLServer. Retrying in 5 sec.");
-                }).Execute(() =>
+                .WaitAndRetry(10, r => TimeSpan.FromSeconds(5))
+                .Execute(() =>
                 {
                     dbInit.Seed().Wait();
                 });
