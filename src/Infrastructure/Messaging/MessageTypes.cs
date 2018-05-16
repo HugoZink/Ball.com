@@ -38,6 +38,9 @@
 
 		NewProductAdded,
 		ProductUpdated,
+	    
+	    // Shipping Events
+	    OrderShipped,
 
         // Time Events
         DayHasPassed,
