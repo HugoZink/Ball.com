@@ -52,6 +52,21 @@ services:
         environment:
             ASPNETCORE_ENVIRONMENT: Production
             ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+            
+    orderapi:
+        image: 'pitstop/orderapi:latest'
+        build: 
+            context: ./
+            dockerfile: Dockerfile.orderapi
+        container_name: orderapi
+        depends_on:
+            - rabbitmq
+            - sqlserver
+        ports:
+            - '5600:5600'
+        environment:
+            ASPNETCORE_ENVIRONMENT: Production
+            ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
 
     productmanagementapi:
         image: pitstop/productmanagementapi:latest
