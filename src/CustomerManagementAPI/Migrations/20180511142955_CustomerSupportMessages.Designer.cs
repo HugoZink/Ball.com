@@ -12,9 +12,10 @@ using System;
 namespace Pitstop.CustomerManagementAPI.Migrations
 {
     [DbContext(typeof(CustomerManagementDBContext))]
-    partial class CustomerManagementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20180511142955_CustomerSupportMessages")]
+    partial class CustomerSupportMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
