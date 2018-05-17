@@ -24,17 +24,21 @@
 		TransportRemoved,
 
 		// Vehicle Commands and Events
-		RegisterVehicle,
-
 		VehicleRegistered,
-
-		// Workshop Commands and Events
-		PlanMaintenanceJob,
-		FinishMaintenanceJob,
-
 		WorkshopPlanningCreated,
 		MaintenanceJobPlanned,
 		MaintenanceJobFinished,
+
+		RegisterVehicle,
+		PlanMaintenanceJob,
+		FinishMaintenanceJob,
+
+		// Products Commands and Events
+		AddProduct,
+		UpdateProduct,
+
+		NewProductAdded,
+		ProductUpdated,
 
 		// Time Events
 		DayHasPassed,
