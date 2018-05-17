@@ -103,8 +103,14 @@ services:
     #     environment:
     #         PITSTOP_ENVIRONMENT: Production
 
+  orderapi:
+    image: orderapi
+    build:
+      context: ./../OrderAPI
+      dockerfile: Dockerfile
 volumes:
     sqlserverdata:
         external: true
     rabbitmqdata:
         external: true
+

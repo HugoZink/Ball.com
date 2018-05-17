@@ -40,6 +40,15 @@
 		NewProductAdded,
 		ProductUpdated,
 
+		// Order commands and events
+		CreateOrder,
+		UpdateOrder,
+		DeleteOrder,
+
+		OrderCreated,
+		OrderUpdated,
+		OrderDeleted,
+
 		// Time Events
 		DayHasPassed,
 	}
