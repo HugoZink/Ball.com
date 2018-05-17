@@ -1,10 +1,7 @@
-﻿using Pitstop.Infrastructure.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using Pitstop.Infrastructure.Messaging;
 
-namespace LogisticsManagementAPI.Events
+namespace ShippingService.Events
 {
     public class TransportRegistered : Event
     {
@@ -12,19 +9,17 @@ namespace LogisticsManagementAPI.Events
         public readonly string CompanyName;
         public readonly string TypeOfShipment;
         public readonly string CountryOfDestination;
-        public readonly string Description;
         public readonly decimal WeightInKgMax;
         public readonly decimal ShippingCost;
 
         public TransportRegistered(Guid messageId, string transportId, string companyName,
-            string typeOfShipment, string countryOfDestination, string description,
+            string typeOfShipment, string countryOfDestination,
             decimal weightInKgMax, decimal shippingCost) : base(messageId, MessageTypes.TransportRegistered)
         {
             TransportId = transportId;
             CompanyName = companyName;
             TypeOfShipment = typeOfShipment;
             CountryOfDestination = countryOfDestination;
-            Description = description;
             WeightInKgMax = weightInKgMax;
             ShippingCost = shippingCost;
         }

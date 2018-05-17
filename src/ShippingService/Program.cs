@@ -1,19 +1,23 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pitstop.Infrastructure.Messaging;
 using Polly;
+using ShippingService.Commands;
+using ShippingService.Events;
 using ShippingService.Infrastructure.Database;
 using ShippingService.Infrastructure.Repositories;
+using ShippingService.Models;
 using ShippingService.Repositories;
 
 namespace ShippingService
 {
-    class Program
+    internal static class Program
     {
         private static readonly string Env;
         private static IConfigurationRoot Config { get; set; }
@@ -29,7 +33,7 @@ namespace ShippingService
                 .Build();
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // get configuration
             var configSection = Config.GetSection("RabbitMQ");
@@ -69,7 +73,7 @@ namespace ShippingService
                     (ex, ts) => { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
                 .Execute(() => dbContext.Database.Migrate());
 
-            messageHandler.Start(messageHandlerCallback);
+			messageHandler.Start(messageHandlerCallback);
 
             if (Env == "Development")
             {
@@ -86,5 +90,17 @@ namespace ShippingService
                 }
             }
         }
-    }
+
+		private static void SetupAutoMapper()
+		{
+			// setup automapper
+			Mapper.Initialize(cfg =>
+			{
+				cfg.CreateMap<OrderShipped, Order>();
+				cfg.CreateMap<ShipOrder, OrderShipped>()
+					.ForCtorParam("orderId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+			});
+		}
+
+	}
 }

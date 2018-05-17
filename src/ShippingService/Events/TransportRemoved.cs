@@ -1,10 +1,7 @@
-﻿using Pitstop.Infrastructure.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using Pitstop.Infrastructure.Messaging;
 
-namespace LogisticsManagementAPI.Events
+namespace ShippingService.Events
 {
     public class TransportRemoved : Event
     {
