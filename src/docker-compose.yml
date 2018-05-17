@@ -23,18 +23,20 @@ services:
             RABBITMQ_DEFAULT_USER: rabbitmquser
             RABBITMQ_DEFAULT_PASS: DEBmbwkSrzy9D1T9cJfa
 
-    # customermanagementapi:
-    #     image: 'pitstop/customermanagementapi:latest'
-    #     build: CustomerManagementAPI
-    #     container_name: customermanagementapi
-    #     depends_on:
-    #         - rabbitmq
-    #         - sqlserver
-    #     ports:
-    #         - '5100:5100'
-    #     environment:
-    #         ASPNETCORE_ENVIRONMENT: Production
-    #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+    customermanagementapi:
+        image: pitstop/customermanagementapi:latest
+        build:
+          context: ./
+          dockerfile: Dockerfile.customermanagement
+        container_name: customermanagementapi
+        depends_on:
+          - rabbitmq
+          - sqlserver
+        ports:
+          - "5100:5100"
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Production
+          - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
     # logisticsmanagementapi:
         # image: 'pitstop/logisticsmanagementapi:latest'
