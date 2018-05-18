@@ -97,8 +97,7 @@ namespace ShippingService
 			Mapper.Initialize(cfg =>
 			{
 				cfg.CreateMap<OrderShipped, Order>();
-				cfg.CreateMap<ShipOrder, OrderShipped>()
-					.ForCtorParam("orderId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+				cfg.CreateMap<ShipOrder, OrderShipped>();
 			});
 		}
 

@@ -6,8 +6,6 @@ namespace ShippingService.Repositories
 {
     public interface ILogisticsRepository
     {
-        Task<IEnumerable<Logistics>> GetAllAsync();
-
         Task<Logistics> GetAsync(string id);
 
         Task<Logistics> UpdateAsync(Logistics logistics);

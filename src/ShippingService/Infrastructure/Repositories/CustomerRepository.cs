@@ -16,8 +16,6 @@ namespace ShippingService.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Customer>> GetAllAsync() => await _context.Customers.ToListAsync();
-
         public async Task<Customer> GetAsync(string id)
         {
             var customer = await _context.Customers.FirstOrDefaultAsync(s => s.Id == id);

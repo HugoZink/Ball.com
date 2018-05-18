@@ -6,8 +6,6 @@ namespace ShippingService.Repositories
 {
     public interface IOrderRepository
     {
-            Task<IEnumerable<Order>> GetAllAsync();
-
             Task<Order> GetAsync(string id);
 
             Task<Order> UpdateAsync(Order order);

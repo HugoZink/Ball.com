@@ -1,6 +1,5 @@
 ﻿using System;
 using Pitstop.Infrastructure.Messaging;
-using ProductManagementAPI.Models;
 
 namespace ShippingService.Events
 {

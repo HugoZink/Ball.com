@@ -23,20 +23,20 @@ services:
             RABBITMQ_DEFAULT_USER: rabbitmquser
             RABBITMQ_DEFAULT_PASS: DEBmbwkSrzy9D1T9cJfa
 
-    customermanagementapi:
-        image: pitstop/customermanagementapi:latest
-        build:
-          context: ./
-          dockerfile: Dockerfile.customermanagement
-        container_name: customermanagementapi
-        depends_on:
-          - rabbitmq
-          - sqlserver
-        ports:
-          - "5100:5100"
-        environment:
-          - ASPNETCORE_ENVIRONMENT=Production
-          - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
+    # customermanagementapi:
+        # image: pitstop/customermanagementapi:latest
+        # build:
+          # context: ./
+          # dockerfile: Dockerfile.customermanagement
+        # container_name: customermanagementapi
+        # depends_on:
+          # - rabbitmq
+          # - sqlserver
+        # ports:
+          # - "5100:5100"
+        # environment:
+          # - ASPNETCORE_ENVIRONMENT=Production
+          # - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
     # logisticsmanagementapi:
         # image: 'pitstop/logisticsmanagementapi:latest'
@@ -53,31 +53,31 @@ services:
             # ASPNETCORE_ENVIRONMENT: Production
             # ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
 
-    # productmanagementapi:
-        # image: pitstop/productmanagementapi:latest
-        # build:
-            # context: ./
-            # dockerfile: Dockerfile.product
-        # container_name: productmanagementapi
-        # depends_on:
-           # - rabbitmq
-           # - sqlserver
-        # ports:
-           # - "5500:5500"
-        # environment:
-           # - ASPNETCORE_ENVIRONMENT=Production
-
-    shippingservice:
-        image: pitstop/shippingservice:latest
+    productmanagementapi:
+        image: pitstop/productmanagementapi:latest
         build:
             context: ./
-            dockerfile: Dockerfile.shipping
-        container_name: shippingservice
+            dockerfile: Dockerfile.product
+        container_name: productmanagementapi
         depends_on:
            - rabbitmq
            - sqlserver
+        ports:
+           - "5500:5500"
         environment:
            - ASPNETCORE_ENVIRONMENT=Production
+
+    # shippingservice:
+        # image: pitstop/shippingservice:latest
+        # build:
+            # context: ./
+            # dockerfile: Dockerfile.shipping
+        # container_name: shippingservice
+        # depends_on:
+           # - rabbitmq
+           # - sqlserver
+        # environment:
+           # - ASPNETCORE_ENVIRONMENT=Production
 
     # auditlogservice:
     #     image: 'pitstop/auditlogservice:latest'

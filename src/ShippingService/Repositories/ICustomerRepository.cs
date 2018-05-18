@@ -6,8 +6,6 @@ namespace ShippingService.Repositories
 {
     public interface ICustomerRepository
     {
-        Task<IEnumerable<Customer>> GetAllAsync();
-
         Task<Customer> GetAsync(string id);
 
         Task<Customer> UpdateAsync(Customer customer);

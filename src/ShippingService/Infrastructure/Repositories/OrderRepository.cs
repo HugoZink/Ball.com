@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ShippingService.Infrastructure.Database;
@@ -16,8 +17,6 @@ namespace ShippingService.Infrastructure.Repositories
         {
             _context = context;
         }
-
-        public async Task<IEnumerable<Order>> GetAllAsync() => await _context.Orders.ToListAsync();
 
         public async Task<Order> GetAsync(string id)
         {
@@ -51,5 +50,18 @@ namespace ShippingService.Infrastructure.Repositories
 
             return newP.Entity;
         }
-    }
+
+		public async Task<String> GenerateTrackingCodeAsyncAndAdd(string id)
+		{
+			var trackingCode = Guid.NewGuid().ToString();
+
+			var order = await GetAsync(id);
+
+			order.TrackingCode = trackingCode;
+
+			await UpdateAsync(order);
+
+			return trackingCode;
+		}
+	}
 }

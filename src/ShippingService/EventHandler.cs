@@ -73,20 +73,20 @@ namespace ShippingService
 
         private async Task<bool> HandleAsync(NewProductAdded e)
         {
-            Console.WriteLine($"Product added: Id = {e.Id}, Name = {e.Name}");
-
-            var newProduct = new Product() {Id = e.Id, Name = e.Name};
+            var newProduct = new Product {Id = e.Id, Name = e.Name};
 
             await _productRepository.CreateAsync(newProduct);
 
-            return true;
+			Console.WriteLine($"Product added: Id = {e.Id}, Name = {e.Name}");
+
+			return true;
         }
 
         private async Task<bool> HandleAsync(ProductUpdated e)
         {
             Console.WriteLine($"Product updated: Id = {e.Id}, Name = {e.Name}");
 
-            var newProduct = new Product() {Id = e.Id, Name = e.Name};
+            var newProduct = new Product {Id = e.Id, Name = e.Name};
 
             await _productRepository.UpdateAsync(newProduct);
 

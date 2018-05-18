@@ -6,8 +6,6 @@ namespace ShippingService.Repositories
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAllAsync();
-
         Task<Product> GetAsync(string id);
 
         Task<Product> UpdateAsync(Product product);

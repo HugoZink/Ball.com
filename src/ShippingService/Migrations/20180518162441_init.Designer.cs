@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using ShippingService.Infrastructure.Database;
 using System;
@@ -10,8 +11,8 @@ using System;
 namespace ShippingService.Migrations
 {
     [DbContext(typeof(ShippingDbContext))]
-    [Migration("20180516131651_Init")]
-    partial class Init
+    [Migration("20180518162441_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,15 +26,29 @@ namespace ShippingService.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Adress");
+
+                    b.Property<string>("Name");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("ShippingService.Models.Logistics", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CountryOfDestination");
+
+                    b.Property<string>("Name");
+
+                    b.Property<decimal>("ShippingCost");
+
+                    b.Property<string>("TypeOfShipment");
+
+                    b.Property<decimal>("WeightInKgMax");
 
                     b.HasKey("Id");
 
@@ -45,9 +60,11 @@ namespace ShippingService.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("TrackingCode");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ShippingService.Models.Product", b =>
@@ -55,9 +72,22 @@ namespace ShippingService.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Name");
+
+                    b.Property<string>("OrderId");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("ShippingService.Models.Product", b =>
+                {
+                    b.HasOne("ShippingService.Models.Order")
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
                 });
 #pragma warning restore 612, 618
         }

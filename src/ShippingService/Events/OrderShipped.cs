@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Pitstop.Infrastructure.Messaging;
-using ProductManagementAPI.Models;
+using ShippingService.Models;
 
 namespace ShippingService.Events
 {
@@ -13,8 +13,8 @@ namespace ShippingService.Events
 
         public OrderShipped(Guid messageId, string trackingCode, string id, List<Product> products) : base(messageId, MessageTypes.OrderShipped)
         {
-            _trackingCode = trackingCode;
-            _id = id;
+			_id = id;
+			_trackingCode = trackingCode;
             _products = products;
         }
     }
