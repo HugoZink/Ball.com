@@ -59,10 +59,14 @@ namespace OrderAPI.EventHandler
 
             try
             {
-                await _dbContext.Customers.AddAsync(new Customer
-                {
-                    CustomerId = e.CustomerId,
-                    Name = e.Name,
+				await _dbContext.Customers.AddAsync(new Customer
+				{
+					CustomerId = e.CustomerId,
+					Name = e.Name,
+					EmailAddress = e.EmailAddress,
+					Address = e.Address,
+					PostalCode = e.PostalCode,
+					City = e.City,
                     TelephoneNumber = e.TelephoneNumber
                 });
                 await _dbContext.SaveChangesAsync();
