@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OrderAPI.Models
+namespace OrderAPI.Model
 {
     public class Order
     {

@@ -1,5 +1,5 @@
 ﻿using Pitstop.Infrastructure.Messaging;
-using OrderAPI.Models;
+using OrderAPI.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

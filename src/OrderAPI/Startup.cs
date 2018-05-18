@@ -13,7 +13,7 @@ using Pitstop.Infrastructure;
 using OrderAPI.Commands;
 using OrderAPI.DataAccess;
 using OrderAPI.Events;
-using OrderAPI.Models;
+using OrderAPI.Model;
 using Pitstop.Infrastructure.Messaging;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
