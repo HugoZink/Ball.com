@@ -57,7 +57,7 @@ services:
         image: 'pitstop/orderapi:latest'
         build: 
             context: ./
-            dockerfile: Dockerfile.orderapi
+            dockerfile: Dockerfile.orders
         container_name: orderapi
         depends_on:
             - rabbitmq
@@ -118,11 +118,6 @@ services:
     #     environment:
     #         PITSTOP_ENVIRONMENT: Production
 
-  orderapi:
-    image: orderapi
-    build:
-      context: ./../OrderAPI
-      dockerfile: Dockerfile
 volumes:
     sqlserverdata:
         external: true
