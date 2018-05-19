@@ -14,5 +14,7 @@ namespace OrderAPI.Model
 		public string City { get; set; }
 		public string TelephoneNumber { get; set; }
 		public string EmailAddress { get; set; }
+
+		public List<Order> Orders { get; set; }
 	}
 }

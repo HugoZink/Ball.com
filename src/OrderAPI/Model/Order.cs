@@ -15,6 +15,20 @@ namespace OrderAPI.Model
 
 		public string TrackingCode { get; set; }
 
-		public List<Product> Products { get; set; }
+		public List<OrderProduct> OrderProducts { get; set; }
+
+		public List<Product> Products
+		{
+			get
+			{
+				var products = new List<Product>();
+				foreach(OrderProduct op in OrderProducts)
+				{
+					products.Add(op.Product);
+				}
+
+				return products;
+			}
+		}
     }
 }

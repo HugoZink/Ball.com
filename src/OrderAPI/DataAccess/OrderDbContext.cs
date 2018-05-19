@@ -19,5 +19,11 @@ namespace OrderAPI.DataAccess
 		public DbSet<Customer> Customers { get; set; }
 
 		public DbSet<Product> Products { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<OrderProduct>()
+				.HasKey(t => new { t.OrderId, t.ProductId });
+		}
 	}
 }
