@@ -24,6 +24,8 @@ namespace OrderAPI.DataAccess
 		{
 			modelBuilder.Entity<OrderProduct>()
 				.HasKey(t => new { t.OrderId, t.ProductId });
+
+			base.OnModelCreating(modelBuilder);
 		}
 	}
 }
