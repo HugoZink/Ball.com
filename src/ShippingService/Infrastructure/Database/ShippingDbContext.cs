@@ -8,6 +8,7 @@ namespace ShippingService.Infrastructure.Database
     {
         public ShippingDbContext(DbContextOptions<ShippingDbContext> options) : base(options)
         {
+				Database.Migrate();
 		}
         
         public DbSet<Order> Orders { get; set; }
@@ -17,6 +18,14 @@ namespace ShippingService.Infrastructure.Database
         public DbSet<Logistics> Logistics { get; set; }
 
         public DbSet<Product> Products { get; set; }
-        
-    }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<OrderProduct>()
+				.HasKey(t => new { t.OrderId, t.ProductId });
+			
+			base.OnModelCreating(modelBuilder);
+		}
+
+	}
 }

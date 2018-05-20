@@ -67,11 +67,11 @@ namespace ShippingService
 
             var dbContext = serviceProvider.GetService<ShippingDbContext>();
 
-            Policy
-                .Handle<Exception>()
-                .WaitAndRetry(5, r => TimeSpan.FromSeconds(5),
-                    (ex, ts) => { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
-                .Execute(() => dbContext.Database.Migrate());
+            //Policy
+            //    .Handle<Exception>()
+            //    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5),
+            //        (ex, ts) => { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
+            //    .Execute(() => dbContext.Database.Migrate());
 
 			messageHandler.Start(messageHandlerCallback);
 

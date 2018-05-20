@@ -12,7 +12,7 @@ namespace ShippingService.Infrastructure.Database
 		{
 			DbContextOptionsBuilder<ShippingDbContext> optionsBuilder = new DbContextOptionsBuilder<ShippingDbContext>();
 
-			optionsBuilder.UseSqlServer(".\\server=localhost,1434;user id=sa;password=8jkGh47hnDw89Haq8LN2;database=Shipping;");
+			optionsBuilder.UseSqlServer("Server=.\\localhost,1434;user id=sa;password=8jkGh47hnDw89Haq8LN2;database=Shipping;");
 
 			return new ShippingDbContext(optionsBuilder.Options);
 		}

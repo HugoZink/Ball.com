@@ -86,7 +86,7 @@ namespace ProductManagementAPI
 
 			Policy
 				.Handle<Exception>()
-				.WaitAndRetry(10, r => TimeSpan.FromSeconds(5))
+				.WaitAndRetry(10, r => TimeSpan.FromSeconds(10))
 				.Execute(() =>
 				{
 					seeder.Seed().Wait();

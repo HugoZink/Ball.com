@@ -56,30 +56,67 @@ namespace ShippingService.Migrations
 
             modelBuilder.Entity("ShippingService.Models.Order", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("OrderId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CustomerId");
 
                     b.Property<string>("TrackingCode");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("ShippingService.Models.OrderProduct", b =>
+                {
+                    b.Property<string>("OrderId");
+
+                    b.Property<string>("ProductId");
+
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProduct");
+                });
+
             modelBuilder.Entity("ShippingService.Models.Product", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ProductId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
 
                     b.Property<string>("OrderId");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProductId");
 
                     b.HasIndex("OrderId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("ShippingService.Models.Order", b =>
+                {
+                    b.HasOne("ShippingService.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+                });
+
+            modelBuilder.Entity("ShippingService.Models.OrderProduct", b =>
+                {
+                    b.HasOne("ShippingService.Models.Order", "Order")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ShippingService.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ShippingService.Models.Product", b =>

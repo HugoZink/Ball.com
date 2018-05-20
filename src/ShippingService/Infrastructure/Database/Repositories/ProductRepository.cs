@@ -18,7 +18,7 @@ namespace ShippingService.Infrastructure.Repositories
 
         public async Task<Product> GetAsync(string id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(s => s.Id == id);
+            var product = await _context.Products.FirstOrDefaultAsync(s => s.ProductId == id);
 
             if (product == null)
             {
@@ -33,7 +33,7 @@ namespace ShippingService.Infrastructure.Repositories
 
             var updatedP = _context.Products.Update(product);
 
-            var exist = await GetAsync(product.Id);
+            var exist = await GetAsync(product.ProductId);
 
             await _context.SaveChangesAsync();
 

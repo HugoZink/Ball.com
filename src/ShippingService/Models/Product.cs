@@ -1,8 +1,10 @@
-﻿namespace ShippingService.Models
+﻿using System.Collections.Generic;
+
+namespace ShippingService.Models
 {
     public class Product
     {
-        public string Id { get; set; }
+		public string ProductId { get; set; }
         public string Name { get; set; }
-    }
+	}
 }

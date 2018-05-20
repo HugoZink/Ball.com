@@ -20,7 +20,7 @@ namespace ShippingService.Infrastructure.Repositories
 
         public async Task<Order> GetAsync(string id)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(s => s.Id == id);
+            var order = await _context.Orders.FirstOrDefaultAsync(s => s.OrderId == id);
 
             if (order == null)
             {
@@ -35,7 +35,7 @@ namespace ShippingService.Infrastructure.Repositories
 
             var updatedP = _context.Orders.Update(order);
 
-            var exist = await GetAsync(order.Id);
+            var exist = await GetAsync(order.OrderId);
 
             await _context.SaveChangesAsync();
 
@@ -51,15 +51,15 @@ namespace ShippingService.Infrastructure.Repositories
             return newP.Entity;
         }
 
-		public async Task<String> GenerateTrackingCodeAsyncAndAdd(string id)
+		public async Task<String> AddTrackingCodeAsync(string id, string trackingCode)
 		{
-			var trackingCode = Guid.NewGuid().ToString();
-
 			var order = await GetAsync(id);
 
 			order.TrackingCode = trackingCode;
 
 			await UpdateAsync(order);
+
+			await _context.SaveChangesAsync();
 
 			return trackingCode;
 		}
