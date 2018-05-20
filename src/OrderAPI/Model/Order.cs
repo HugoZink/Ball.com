@@ -34,6 +34,11 @@ namespace OrderAPI.Model
 				return products;
 			}
 		}
+
+		public Order()
+		{
+			this.OrderProducts = new List<OrderProduct>();
+		}
     }
 
 	public enum OrderState

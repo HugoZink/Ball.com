@@ -48,7 +48,7 @@ namespace OrderAPI.Controllers
 			_dbContext.Orders.Add(order);
 			await _dbContext.SaveChangesAsync();
 
-			return CreatedAtRoute("GetByOrderId", new { orderId = order.OrderId });
+			return CreatedAtRoute("GetByOrderId", new { orderId = order.OrderId }, order);
         }
 
 		[HttpPost]
@@ -76,7 +76,7 @@ namespace OrderAPI.Controllers
 			order.OrderProducts.Add(orderProduct);
 			await _dbContext.SaveChangesAsync();
 
-			return AcceptedAtRoute("GetByOrderId", new { orderId = order.OrderId });
+			return AcceptedAtRoute("GetByOrderId", new { orderId = order.OrderId }, order);
 		}
 
 		[HttpDelete]
@@ -106,7 +106,7 @@ namespace OrderAPI.Controllers
 
 			await _dbContext.SaveChangesAsync();
 
-			return AcceptedAtRoute("GetByOrderId", new { orderId = order.OrderId });
+			return AcceptedAtRoute("GetByOrderId", new { orderId = order.OrderId }, order);
 		}
 
         [HttpDelete("{id}")]
