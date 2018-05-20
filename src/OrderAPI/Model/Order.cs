@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace OrderAPI.Model
 
 		public List<OrderProduct> OrderProducts { get; set; }
 
+		[NotMapped]
 		public IEnumerable<Product> Products
 		{
 			get
