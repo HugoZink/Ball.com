@@ -13,6 +13,6 @@ namespace OrderAPI.Model
 
 		public decimal Price { get; set; }
 
-		public float WeightKg { get; set; }
+		public decimal WeightKg { get; set; }
 	}
 }

@@ -17,6 +17,7 @@ using OrderAPI.Model;
 using Pitstop.Infrastructure.Messaging;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
+using Polly;
 
 namespace OrderAPI
 {
@@ -50,6 +51,7 @@ namespace OrderAPI
 			string password = configSection["Password"];
 
 			services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
+			services.AddTransient<OrderDbInitializer>();
 
 			// Add framework services.
 			services.AddMvc();
@@ -62,7 +64,7 @@ namespace OrderAPI
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, OrderDbInitializer dbInit)
         {
 			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 			loggerFactory.AddDebug();
@@ -86,6 +88,14 @@ namespace OrderAPI
 			{
 				app.UseDeveloperExceptionPage();
 			}
+
+			Policy
+				.Handle<Exception>()
+				.WaitAndRetry(10, r => TimeSpan.FromSeconds(5))
+				.Execute(() =>
+				{
+					dbInit.Seed().Wait();
+				});
 		}
 
 		private void SetupAutoMapper()
