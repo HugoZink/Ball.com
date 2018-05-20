@@ -15,9 +15,11 @@ namespace OrderAPI.Model
 
 		public string TrackingCode { get; set; }
 
+		public OrderState State { get; set; }
+
 		public List<OrderProduct> OrderProducts { get; set; }
 
-		public List<Product> Products
+		public IEnumerable<Product> Products
 		{
 			get
 			{
@@ -31,4 +33,13 @@ namespace OrderAPI.Model
 			}
 		}
     }
+
+	public enum OrderState
+	{
+		Pending,
+		PaymentInProgress,
+		PaymentComplete,
+		AwaitingAfterPayment,
+		Closed
+	}
 }
