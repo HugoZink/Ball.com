@@ -35,6 +35,11 @@
         MaintenanceJobPlanned,
         MaintenanceJobFinished,
 
+        // Warehouse Commands and Events
+        RegisterPackage,
+
+        PackageRegistered,
+
         // Time Events
         DayHasPassed,
     }

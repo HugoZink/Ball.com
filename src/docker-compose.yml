@@ -64,20 +64,20 @@ services:
     #     environment:
     #         ASPNETCORE_ENVIRONMENT: Production
     #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
-    logisticsmanagementapi:
-        image: 'pitstop/logisticsmanagementapi:latest'
-        build: 
-            context: ./
-            dockerfile: Dockerfile.logistics
-        container_name: logisticsmanagementapi
-        depends_on:
-            - rabbitmq
-            - sqlserver
-        ports:
-            - '5300:5300'
-        environment:
-            ASPNETCORE_ENVIRONMENT: Production
-            ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+    # logisticsmanagementapi:
+    #     image: 'pitstop/logisticsmanagementapi:latest'
+    #     build: 
+    #         context: ./
+    #         dockerfile: Dockerfile.logistics
+    #     container_name: logisticsmanagementapi
+    #     depends_on:
+    #         - rabbitmq
+    #         - sqlserver
+    #     ports:
+    #         - '5300:5300'
+    #     environment:
+    #         ASPNETCORE_ENVIRONMENT: Production
+    #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
     # auditlogservice:
     #     image: 'pitstop/auditlogservice:latest'
     #     build: AuditlogService
@@ -135,15 +135,11 @@ services:
     #     environment:
     #         ASPNETCORE_ENVIRONMENT: Production
     #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
-  warehousemanagementapi:
-    image: ${DOCKER_REGISTRY}warehousemanagementapi
-    build:
-      context: .
-      dockerfile: ../WarehouseManagementAPI/Dockerfile
 
 volumes:
     sqlserverdata:
         external: true
     rabbitmqdata:
         external: true
+
 
