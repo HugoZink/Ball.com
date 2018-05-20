@@ -16,7 +16,7 @@ namespace OrderAPI.Model
 
 		public string TrackingCode { get; set; }
 
-		public OrderState State { get; set; }
+		public string State { get; set; }
 
 		public List<OrderProduct> OrderProducts { get; set; }
 
@@ -38,15 +38,16 @@ namespace OrderAPI.Model
 		public Order()
 		{
 			this.OrderProducts = new List<OrderProduct>();
+			this.State = OrderState.PENDING;
 		}
     }
 
-	public enum OrderState
+	public static class OrderState
 	{
-		Pending,
-		PaymentInProgress,
-		PaymentComplete,
-		AwaitingAfterPayment,
-		Closed
+		public const string PENDING = "Pending";
+		public const string PAYMENTINPROGRESS = "Payment In Progress";
+		public const string PAYMENTCOMPLETE = "PaymentComplete";
+		public const string AWAITINGAFTERPAYMENT = "AwaitingAfterPayment";
+		public const string CLOSED = "Closed";
 	}
 }

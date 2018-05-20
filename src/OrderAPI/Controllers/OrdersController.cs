@@ -118,7 +118,7 @@ namespace OrderAPI.Controllers
 				return NotFound();
 			}
 
-			if(order.State != OrderState.Pending)
+			if(order.State != OrderState.PENDING)
 			{
 				return BadRequest("Cannot delete a non-pending order.");
 			}
