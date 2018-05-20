@@ -9,7 +9,7 @@
 
 		public decimal Price { get; set; }
 
-		public float WeightKg { get; set; }
+		public decimal WeightKg { get; set; }
 
 		public ProductType Type { get; set; }
 	}

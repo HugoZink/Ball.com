@@ -13,10 +13,10 @@ namespace ProductManagementAPI.Infrastructure.Commands
 		public string Id;
 		public readonly string Name;
 		public readonly decimal Price;
-		public readonly float WeightKg;
+		public readonly decimal WeightKg;
 		public readonly ProductType Type;
 
-		public UpdateProduct(Guid messageId, string id, string name, decimal price, float weightkg, ProductType type) :
+		public UpdateProduct(Guid messageId, string id, string name, decimal price, decimal weightkg, ProductType type) :
 			base(messageId, MessageTypes.UpdateProduct)
 		{
 			Id = id;

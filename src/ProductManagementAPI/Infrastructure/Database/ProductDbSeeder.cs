@@ -7,41 +7,32 @@ using System.Threading.Tasks;
 
 namespace ProductManagementAPI.Infrastructure.Database
 {
-    public class ProductDbSeeder
-    {
-		private ProductDbContext _dbContext;
+	public static class ProductDbSeeder
+	{
 
-		public ProductDbSeeder(ProductDbContext dbContext)
+		public static void Seed(ProductDbContext _dbContext)
 		{
-			_dbContext = dbContext;
-		}
 
-		public async Task Seed()
-		{
-			if (!_dbContext.Products.Any())
+			_dbContext.Database.EnsureCreated();
+
+			// Look for Any existing Data
+			if (_dbContext.Products.Any())
 			{
+				return; // Database has been Seeded
+			}
 
-				_dbContext.Database.EnsureCreated();
-
-				// Look for Any existing Data
-				if (_dbContext.Products.Any())
-				{
-					return; // Database has been Seeded
-				}
-
-				var products = new Product[]
-				{
+			var products = new Product[]
+			{
 
 				new Product {Name = "Phone", Price = 1.00m, WeightKg= 2, Type = ProductType.Electronic},
 				new Product {Name = "Chair", Price = 2.00m, WeightKg= 20, Type = ProductType.None},
 				new Product {Name = "Dino", Price = 3.00m, WeightKg= 1, Type = ProductType.Toy}
 
-				};
+			};
 
-				_dbContext.AddRange(products);
+			_dbContext.AddRange(products);
 
-				await _dbContext.SaveChangesAsync();
-			}
+			_dbContext.SaveChanges();
 		}
 	}
 }

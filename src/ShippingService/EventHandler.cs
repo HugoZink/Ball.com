@@ -1,30 +1,35 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Pitstop.Infrastructure.Messaging;
 using ShippingService.Events;
 using ShippingService.Models;
 using ShippingService.Repositories;
+using ShippingService.Services;
 
 namespace ShippingService
 {
     public class EventHandler : IMessageHandlerCallback
     {
-        private IMessageHandler _messageHandler;
-        private ICustomerRepository _customerRepository;
+		private IMessagePublisher _messagePublisher;
+		private ICustomerRepository _customerRepository;
         private IOrderRepository _orderRepository;
         private IProductRepository _productRepository;
         private ILogisticsRepository _logisticsRepository;
+        private ILogisticsService _logisticsService;
 
-        public EventHandler(IMessageHandler messageHandler, ICustomerRepository customerRepository,
+		public EventHandler(IMessagePublisher messagePublisher, ICustomerRepository customerRepository,
             IOrderRepository orderRepository, IProductRepository productRepository,
-            ILogisticsRepository logisticsRepository)
+            ILogisticsRepository logisticsRepository, ILogisticsService logisticsService)
         {
-            _messageHandler = messageHandler;
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _logisticsRepository = logisticsRepository;
-        }
+            _logisticsService = logisticsService;
+			_messagePublisher = messagePublisher;
+
+		}
 
         public async Task<bool> HandleMessageAsync(MessageTypes messageType, string message)
         {
@@ -52,7 +57,10 @@ namespace ShippingService
                 case MessageTypes.ProductUpdated:
                     await HandleAsync(messageObject.ToObject<ProductUpdated>());
                     break;
-                default:
+				case MessageTypes.OrderPackeged:
+					await HandlePackageOrdersAndPublishAsync(messageObject.ToObject<OrderPackaged>());
+					break;
+				default:
                     throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
             }
 
@@ -139,14 +147,19 @@ namespace ShippingService
             return true;
         }
 
-//        public void Start()
-//        {
-//            _messageHandler.Start(this);
-//        }
-//
-//        public void Stop()
-//        {
-//            _messageHandler.Stop();
-//        }
-    }
+		private async Task<bool> HandlePackageOrdersAndPublishAsync(OrderPackaged e)
+		{
+			Console.WriteLine($"Recieved order " + e._order);
+
+			var trackingCode = _logisticsService.GenerateTrackingCode();
+
+			Order order = new Order { OrderId = e._order.OrderId, Customer = e._order.Customer, OrderProducts = e._order.OrderProducts, TrackingCode = trackingCode };
+
+			OrderShipped orderShipped = Mapper.Map<OrderShipped>(order);
+			// send event
+			await _messagePublisher.PublishMessageAsync(MessageTypes.OrderShipped, orderShipped, "");
+
+			return true;
+		}
+	}
 }

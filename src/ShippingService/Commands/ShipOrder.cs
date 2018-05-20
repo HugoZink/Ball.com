@@ -7,15 +7,13 @@ namespace ShippingService.Commands
 {
     public class ShipOrder : Command
     {
-		private readonly string _trackingCode;
 		private readonly string _id;
-		private readonly List<Product> _products;
+		private readonly Order _order;
 
-		public ShipOrder(Guid messageId, MessageTypes messageType, string trackingCode, string id, List<Product> products) : base(messageId, messageType)
+		public ShipOrder(Guid messageId, MessageTypes messageType, string id, Order order) : base(messageId, messageType)
         {
 			_id = id;
-			_trackingCode = trackingCode;
-			_products = products;
+			_order = order;
 		}
     }
 }

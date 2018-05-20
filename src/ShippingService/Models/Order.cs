@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShippingService.Models
 {
@@ -12,6 +13,7 @@ namespace ShippingService.Models
 
 		public ICollection<OrderProduct> OrderProducts { get; set; }
 
+		[NotMapped]
 		public List<Product> Products
 	    {
 		    get

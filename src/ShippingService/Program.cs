@@ -12,8 +12,10 @@ using ShippingService.Commands;
 using ShippingService.Events;
 using ShippingService.Infrastructure.Database;
 using ShippingService.Infrastructure.Repositories;
+using ShippingService.Infrastructure.Services;
 using ShippingService.Models;
 using ShippingService.Repositories;
+using ShippingService.Services;
 
 namespace ShippingService
 {
@@ -51,8 +53,10 @@ namespace ShippingService
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<ILogisticsRepository, LogisticsRepository>();
-            
-            services.AddTransient<IMessageHandlerCallback, EventHandler>();
+
+            services.AddTransient<ILogisticsService, LogisticsService>();
+
+			services.AddTransient<IMessageHandlerCallback, EventHandler>();
             
             services.AddTransient<IMessagePublisher>((sp) =>
                 new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
@@ -96,8 +100,10 @@ namespace ShippingService
 			// setup automapper
 			Mapper.Initialize(cfg =>
 			{
-				cfg.CreateMap<OrderShipped, Order>();
-				cfg.CreateMap<ShipOrder, OrderShipped>();
+				cfg.CreateMap<OrderShipped, Order>()
+					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+				cfg.CreateMap<ShipOrder, OrderShipped>()
+					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
 			});
 		}
 

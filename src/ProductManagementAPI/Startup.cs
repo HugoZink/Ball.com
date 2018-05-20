@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pitstop.Infrastructure.Messaging;
@@ -51,7 +52,6 @@ namespace ProductManagementAPI
 			string password = configSection["Password"];
 			services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
 			services.AddTransient<IProductRepository, EFProductRepository>();
-			services.AddTransient<ProductDbSeeder>();
 
 			services.AddMvc();
 
@@ -63,7 +63,7 @@ namespace ProductManagementAPI
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProductDbSeeder seeder)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProductDbContext context)
 		{
 			if (env.IsDevelopment())
 			{
@@ -89,7 +89,7 @@ namespace ProductManagementAPI
 				.WaitAndRetry(10, r => TimeSpan.FromSeconds(10))
 				.Execute(() =>
 				{
-					seeder.Seed().Wait();
+					ProductDbSeeder.Seed(context);
 				});
 		}
 
@@ -101,6 +101,8 @@ namespace ProductManagementAPI
 				cfg.CreateMap<AddProduct, Product>();
 				cfg.CreateMap<UpdateProduct, Product>();
 				cfg.CreateMap<AddProduct, NewProductAdded>()
+					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+				cfg.CreateMap<UpdateProduct, ProductUpdated>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
 				cfg.CreateMap<UpdateProduct, ProductUpdated>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));

@@ -43,6 +43,9 @@
 	    // Shipping Events
 	    OrderShipped,
 
+		// Warehouse Events
+		OrderPackeged,
+
 		// Time Events
 		DayHasPassed,
 	}
