@@ -40,7 +40,7 @@ namespace LogisticsManagementAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add DbContext Classes
+            // Add dbcontext Classes
             var sqlConnectionString = Configuration.GetConnectionString("LogisticsManagementCN");
             services.AddDbContext<LogisticsManagementDbContext>(options =>
                 options.UseSqlServer(sqlConnectionString));
@@ -95,7 +95,7 @@ namespace LogisticsManagementAPI
 
         private void SetupAutoMapper()
         {
-            // setup automapper
+            // Setup automapper
             Mapper.Initialize(cfg =>
             {
                 // Map CRUD Commands and Events

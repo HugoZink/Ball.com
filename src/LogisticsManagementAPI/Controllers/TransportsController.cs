@@ -16,8 +16,8 @@ namespace LogisticsManagementAPI.Controllers
     [Route("api/[controller]")]
     public class TransportsController : Controller
     {
-        IMessagePublisher _messagePublisher;
-        LogisticsManagementDbContext _dbContext;
+        public IMessagePublisher _messagePublisher;
+        public LogisticsManagementDbContext _dbContext;
 
         public TransportsController(LogisticsManagementDbContext dbContext, IMessagePublisher messagePublisher)
         {
