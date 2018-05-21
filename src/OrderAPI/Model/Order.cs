@@ -20,6 +20,8 @@ namespace OrderAPI.Model
 
 		public List<OrderProduct> OrderProducts { get; set; }
 
+		public bool AfterPayment { get; set; }
+
 		[NotMapped]
 		public IEnumerable<Product> Products
 		{

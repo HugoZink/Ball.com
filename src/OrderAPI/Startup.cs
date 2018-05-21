@@ -89,6 +89,7 @@ namespace OrderAPI
 				app.UseDeveloperExceptionPage();
 			}
 
+			
 			Policy
 				.Handle<Exception>()
 				.WaitAndRetry(10, r => TimeSpan.FromSeconds(5))

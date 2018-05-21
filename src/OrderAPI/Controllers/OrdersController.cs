@@ -7,6 +7,8 @@ using Pitstop.Infrastructure.Messaging;
 using OrderAPI.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using OrderAPI.Model;
+using OrderAPI.Events;
+using AutoMapper;
 
 namespace OrderAPI.Controllers
 {
@@ -75,6 +77,40 @@ namespace OrderAPI.Controllers
 
 			order.OrderProducts.Add(orderProduct);
 			await _dbContext.SaveChangesAsync();
+
+			return AcceptedAtRoute("GetByOrderId", new { orderId = order.OrderId }, order);
+		}
+
+		[HttpPost]
+		[Route("{orderId}/place", Name = "PlaceOrder")]
+		public async Task<IActionResult> PlaceOrder(string orderId, [FromBody] Order orderCommand)
+		{
+			if(!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var order = await _dbContext.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+			if (order == null)
+			{
+				return NotFound();
+			}
+
+			order.AfterPayment = orderCommand.AfterPayment;
+
+			if(order.AfterPayment)
+			{
+				order.State = OrderState.AWAITINGAFTERPAYMENT;
+			}
+			else
+			{
+				order.State = OrderState.PAYMENTINPROGRESS;
+			}
+
+			await _dbContext.SaveChangesAsync();
+
+			OrderPlaced e = Mapper.Map<OrderPlaced>(order);
+			await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
 			return AcceptedAtRoute("GetByOrderId", new { orderId = order.OrderId }, order);
 		}

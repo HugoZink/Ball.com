@@ -44,10 +44,12 @@
 		CreateOrder,
 		UpdateOrder,
 		DeleteOrder,
+		PlaceOrder,
 
 		OrderCreated,
 		OrderUpdated,
 		OrderDeleted,
+		OrderPlaced,
 
 		// Time Events
 		DayHasPassed,
