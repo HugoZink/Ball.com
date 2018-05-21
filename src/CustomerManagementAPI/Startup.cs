@@ -41,7 +41,7 @@ namespace Pitstop.CustomerManagementAPI
             string host = configSection["Host"];
             string userName = configSection["UserName"];
             string password = configSection["Password"];
-            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
+            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
 
             // Add framework services.
             services.AddMvc();
