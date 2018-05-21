@@ -64,6 +64,20 @@ services:
     #     environment:
     #         ASPNETCORE_ENVIRONMENT: Production
     #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+    warehousemanagementapi:
+        image: 'pitstop/warehousemanagementapi:latest'
+        build: 
+            context: ./
+            dockerfile: Dockerfile.warehouse
+        container_name: warehousemanagementapi
+        depends_on:
+            - rabbitmq
+            - sqlserver
+        ports:
+            - '5700:5700'
+        environment:
+            ASPNETCORE_ENVIRONMENT: Production
+            ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
     # logisticsmanagementapi:
     #     image: 'pitstop/logisticsmanagementapi:latest'
     #     build: 

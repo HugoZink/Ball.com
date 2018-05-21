@@ -1,0 +1,21 @@
+FROM microsoft/aspnetcore-build:2.0 AS build-env
+WORKDIR /app
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet restore WarehouseManagementAPI/*.csproj
+RUN dotnet publish WarehouseManagementAPI/*.csproj -c Release -o out
+
+# Build runtime image
+FROM microsoft/aspnetcore:2.0
+COPY --from=build-env /app/WarehouseManagementAPI/out .
+
+# Expose ports
+EXPOSE 5700/tcp
+ENV ASPNETCORE_URLS http://*:5700
+
+# Configure environment variables
+ENV WEBSITE_SITE_NAME WarehouseManagementAPI
+
+# Start
+ENTRYPOINT ["dotnet", "WarehouseManagementAPI.dll"]
