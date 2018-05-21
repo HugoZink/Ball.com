@@ -11,5 +11,7 @@ namespace WarehouseManagementAPI.Repositories
         Task<IEnumerable<Package>> GetPackagesAsync();
         Task<Package> GetPackageAsync(string packageId);
         Task AddPackageAsync(Package package);
+        Task UpdatePackageAsync();
+        Task DeletePackageAsync(Package package);
     }
 }

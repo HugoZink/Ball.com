@@ -19,13 +19,16 @@ namespace WarehouseManagementAPI.Events
         public readonly decimal WeightInKgMax;
         public readonly DateTime DeliveryTime;
 
+        public readonly Transport Transport;
+
+        public readonly List<Order> Orders;
         public readonly List<Product> Products;
 
         public PackageRegistered(Guid messageId, string packageId,
             string typeOfPackage, string region, string shippingStatus,
             string barcodeNumber, string zipCode, bool delivered,
-            decimal weightInKgMax, DateTime deliveryTime,
-            List<Product> products) : base(messageId, MessageTypes.PackageRegistered)
+            decimal weightInKgMax, DateTime deliveryTime, Transport transport,
+            List<Order> orders, List<Product> products) : base(messageId, MessageTypes.PackageRegistered)
         {
             PackageId = packageId;
             TypeOfPackage = typeOfPackage;
@@ -37,6 +40,9 @@ namespace WarehouseManagementAPI.Events
             WeightInKgMax = weightInKgMax;
             DeliveryTime = deliveryTime;
 
+            Transport = transport;
+
+            Orders = orders;
             Products = products;
         }
     }

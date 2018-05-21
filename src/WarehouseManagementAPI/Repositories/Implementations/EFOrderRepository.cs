@@ -19,14 +19,33 @@ namespace WarehouseManagementAPI.Repositories.Implementations
 
         public async Task<IEnumerable<Order>> GetOrdersAsync()
         {
-            var orders = await _dbContext.Orders.ToListAsync();
+            var orders = await _dbContext.Orders
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .ToListAsync();
+
+            foreach (var order in orders)
+            {
+                foreach (var op in order.OrderProducts)
+                {
+                    order.Products.Add(op.Product);
+                }
+            }
 
             return orders;
         }
 
         public async Task<Order> GetOrderAsync(string orderId)
         {
-            var order = await _dbContext.Orders.FirstOrDefaultAsync(t => t.OrderId == orderId);
+            var order = await _dbContext.Orders
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            foreach (var op in order.OrderProducts)
+            {
+                order.Products.Add(op.Product);
+            }
 
             return order;
         }

@@ -37,11 +37,32 @@ namespace WarehouseManagementAPI.Migrations
                     b.Property<string>("OrderId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("CustomerId");
+
+                    b.Property<DateTime>("DateTime");
+
                     b.Property<string>("Destination");
 
                     b.HasKey("OrderId");
 
+                    b.HasIndex("CustomerId");
+
                     b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("WarehouseManagementAPI.Models.OrderProduct", b =>
+                {
+                    b.Property<string>("OrderId");
+
+                    b.Property<string>("ProductId");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProduct");
                 });
 
             modelBuilder.Entity("WarehouseManagementAPI.Models.Package", b =>
@@ -59,6 +80,8 @@ namespace WarehouseManagementAPI.Migrations
 
                     b.Property<string>("ShippingStatus");
 
+                    b.Property<string>("TransportId");
+
                     b.Property<string>("TypeOfPackage");
 
                     b.Property<decimal>("WeightInKgMax");
@@ -67,7 +90,22 @@ namespace WarehouseManagementAPI.Migrations
 
                     b.HasKey("PackageId");
 
+                    b.HasIndex("TransportId");
+
                     b.ToTable("Package");
+                });
+
+            modelBuilder.Entity("WarehouseManagementAPI.Models.PackageOrder", b =>
+                {
+                    b.Property<string>("PackageId");
+
+                    b.Property<string>("OrderId");
+
+                    b.HasKey("PackageId", "OrderId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("PackageOrder");
                 });
 
             modelBuilder.Entity("WarehouseManagementAPI.Models.PackageProduct", b =>
@@ -87,6 +125,8 @@ namespace WarehouseManagementAPI.Migrations
                 {
                     b.Property<string>("ProductId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Amount");
 
                     b.Property<decimal>("Weight");
 
@@ -115,6 +155,46 @@ namespace WarehouseManagementAPI.Migrations
                     b.HasKey("TransportId");
 
                     b.ToTable("Transport");
+                });
+
+            modelBuilder.Entity("WarehouseManagementAPI.Models.Order", b =>
+                {
+                    b.HasOne("WarehouseManagementAPI.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+                });
+
+            modelBuilder.Entity("WarehouseManagementAPI.Models.OrderProduct", b =>
+                {
+                    b.HasOne("WarehouseManagementAPI.Models.Order", "Order")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WarehouseManagementAPI.Models.Product", "Product")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("WarehouseManagementAPI.Models.Package", b =>
+                {
+                    b.HasOne("WarehouseManagementAPI.Models.Transport", "Transport")
+                        .WithMany()
+                        .HasForeignKey("TransportId");
+                });
+
+            modelBuilder.Entity("WarehouseManagementAPI.Models.PackageOrder", b =>
+                {
+                    b.HasOne("WarehouseManagementAPI.Models.Order", "Order")
+                        .WithMany("PackageOrders")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WarehouseManagementAPI.Models.Package", "Package")
+                        .WithMany("PackageOrders")
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WarehouseManagementAPI.Models.PackageProduct", b =>

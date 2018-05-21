@@ -1,28 +1,48 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WarehouseManagementAPI.DataAccess;
 using WarehouseManagementAPI.Models;
 
 namespace WarehouseManagementAPI.Repositories.Implementations
 {
     public class EFTransportRepository : ITransportRepository
     {
-        private string _sqlConnectionString;
+        private WarehouseManagementDbContext _dbContext;
 
-        public EFTransportRepository(string sqlConnectionString)
+        public EFTransportRepository(WarehouseManagementDbContext dbContext)
         {
-            _sqlConnectionString = sqlConnectionString;
+            _dbContext = dbContext;
         }
 
-        public Task<IEnumerable<Transport>> GetTransportsAsync()
+        public async Task<IEnumerable<Transport>> GetTransportsAsync()
         {
-            throw new NotImplementedException();
+            var transports = await _dbContext.Transports.ToListAsync();
+
+            return transports;
         }
 
-        public Task<Transport> GetTransportAsync(string transportId)
+        public async Task<IEnumerable<Transport>> GetTransportsAsync(string packageId)
         {
-            throw new NotImplementedException();
+            var package = await _dbContext.Packages.FirstOrDefaultAsync(p => p.PackageId == packageId);
+
+            var transports = await _dbContext.Transports
+                .Where(t => package.TypeOfPackage == t.Description)
+                .Where(t => package.Region == t.CountryOfDestination)
+                .Where(t => package.WeightInKgMax <= t.WeightInKgMax)
+                .OrderBy(t => t.ShippingCost)
+                .ToListAsync();
+
+            return transports;
+        }
+
+        public async Task<Transport> GetTransportAsync(string transportId)
+        {
+            var transport = await _dbContext.Transports.FirstOrDefaultAsync(t => t.TransportId == transportId);
+
+            return transport;
         }
     }
 }

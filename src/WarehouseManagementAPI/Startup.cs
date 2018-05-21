@@ -50,7 +50,7 @@ namespace WarehouseManagementAPI
             services.AddTransient<IProductRepository>((sp) =>
                 new EFProductRepository(sp.GetService<WarehouseManagementDbContext>()));
             services.AddTransient<ITransportRepository>((sp) =>
-                new EFTransportRepository(sqlConnectionString));
+                new EFTransportRepository(sp.GetService<WarehouseManagementDbContext>()));
 
             // Add messagepublisher classes
             var configSection = Configuration.GetSection("RabbitMQ");

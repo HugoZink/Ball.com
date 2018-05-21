@@ -10,11 +10,13 @@ namespace WarehouseManagementAPI.Controllers
     [Route("api/[controller]")]
     public class TransportsController : Controller
     {
+        public IPackageRepository _packageRepo;
         public ITransportRepository _transportRepo;
 
-        public TransportsController(ITransportRepository transportRepo)
+        public TransportsController(IPackageRepository packageRepo, ITransportRepository transportRepo)
         {
             _transportRepo = transportRepo;
+            _packageRepo = packageRepo;
         }
 
         // GET api/transports
@@ -22,6 +24,21 @@ namespace WarehouseManagementAPI.Controllers
         public async Task<IActionResult> GetAsync()
         {
             return Ok(await _transportRepo.GetTransportsAsync());
+        }
+
+        // GET api/transports/packages/5
+        [HttpGet]
+        [Route("packages/{packageId}", Name = "GetTransportsByPackageId")]
+        public async Task<IActionResult> GetTransportsByPackageIdAsync(string packageId)
+        {
+            var package = await _packageRepo.GetPackageAsync(packageId);
+
+            if (package != null)
+            {
+                return Ok(await _transportRepo.GetTransportsAsync(package.PackageId));
+            }
+
+            return NotFound();
         }
 
         // GET api/transports/5

@@ -25,7 +25,8 @@ namespace WarehouseManagementAPI.Controllers
         }
 
         // GET api/orders/5
-        [HttpGet("{orderId}")]
+        [HttpGet]
+        [Route("{orderId}", Name = "GetOrderById")]
         public async Task<IActionResult> GetAsync(string orderId)
         {
             var order = await _orderRepo.GetOrderAsync(orderId);

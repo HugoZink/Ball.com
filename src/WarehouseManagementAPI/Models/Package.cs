@@ -19,15 +19,25 @@ namespace WarehouseManagementAPI.Models
         public decimal WeightInKgMax { get; set; }
         public DateTime DeliveryTime { get; set; }
 
+        public Transport Transport { get; set; }
+
+        [JsonIgnore]
+        public List<PackageOrder> PackageOrders { get; set; }
+
         [JsonIgnore]
         public List<PackageProduct> PackageProducts { get; set; }
+
+        [NotMapped]
+        public List<Order> Orders { get; set; }
 
         [NotMapped]
         public List<Product> Products { get; set; }
 
         public Package()
         {
+            PackageOrders = new List<PackageOrder>();
             PackageProducts = new List<PackageProduct>();
+            Orders = new List<Order>();
             Products = new List<Product>();
         }
     }

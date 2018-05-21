@@ -9,6 +9,7 @@ namespace WarehouseManagementAPI.Repositories
     public interface ITransportRepository
     {
         Task<IEnumerable<Transport>> GetTransportsAsync();
+        Task<IEnumerable<Transport>> GetTransportsAsync(string packageId);
         Task<Transport> GetTransportAsync(string transportId);
     }
 }
