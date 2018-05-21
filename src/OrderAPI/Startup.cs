@@ -108,6 +108,7 @@ namespace OrderAPI
 				cfg.CreateMap<CreateOrder, Order>();
 				cfg.CreateMap<UpdateOrder, Order>();
 				cfg.CreateMap<RemoveOrder, Order>();
+				cfg.CreateMap<PlaceOrder, Order>();
 
 				cfg.CreateMap<Order, CreateOrder>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
@@ -115,12 +116,18 @@ namespace OrderAPI
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
 				cfg.CreateMap<Order, RemoveOrder>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
+				cfg.CreateMap<Order, PlaceOrder>()
+					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
 
 				cfg.CreateMap<CreateOrder, OrderCreated>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
 				cfg.CreateMap<UpdateOrder, OrderUpdated>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
 				cfg.CreateMap<RemoveOrder, OrderDeleted>()
+					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
+				cfg.CreateMap<PlaceOrder, OrderPlaced>()
+					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
+				cfg.CreateMap<Order, OrderPlaced>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
 			});
 		}

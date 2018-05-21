@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using OrderAPI.Model;
 using OrderAPI.Events;
 using AutoMapper;
+using OrderAPI.Commands;
 
 namespace OrderAPI.Controllers
 {
@@ -83,7 +84,7 @@ namespace OrderAPI.Controllers
 
 		[HttpPost]
 		[Route("{orderId}/place", Name = "PlaceOrder")]
-		public async Task<IActionResult> PlaceOrder(string orderId, [FromBody] Order orderCommand)
+		public async Task<IActionResult> PlaceOrder(string orderId, [FromBody] PlaceOrder orderCommand)
 		{
 			if(!ModelState.IsValid)
 			{
