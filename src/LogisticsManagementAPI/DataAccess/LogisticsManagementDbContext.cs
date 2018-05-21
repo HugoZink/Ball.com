@@ -22,7 +22,7 @@ namespace LogisticsManagementAPI.DataAccess
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Transport>().HasKey(m => m.TransportId);
+            builder.Entity<Transport>().HasKey(t => t.TransportId);
             builder.Entity<Transport>().ToTable("Transport");
             base.OnModelCreating(builder);
         }

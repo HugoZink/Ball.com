@@ -41,7 +41,7 @@ namespace Pitstop.CustomerManagementAPI
             string host = configSection["Host"];
             string userName = configSection["UserName"];
             string password = configSection["Password"];
-            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Pitstop"));
+            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
 
             // Add framework services.
             services.AddMvc();
@@ -55,7 +55,7 @@ namespace Pitstop.CustomerManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, CustomerManagementDBContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();

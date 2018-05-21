@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pitstop.Infrastructure.Messaging;
+using Polly;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace LogisticsManagementAPI
@@ -40,7 +42,7 @@ namespace LogisticsManagementAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add DbContext Classes
+            // Add DbContext classes
             var sqlConnectionString = Configuration.GetConnectionString("LogisticsManagementCN");
             services.AddDbContext<LogisticsManagementDbContext>(options =>
                 options.UseSqlServer(sqlConnectionString));
@@ -90,7 +92,13 @@ namespace LogisticsManagementAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            dbInit.Seed().Wait();
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(10, r => TimeSpan.FromSeconds(5))
+                .Execute(() =>
+                {
+                    dbInit.Seed().Wait();
+                });
         }
 
         private void SetupAutoMapper()
