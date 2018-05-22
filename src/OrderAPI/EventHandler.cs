@@ -41,6 +41,9 @@ namespace OrderAPI.EventHandler
                     case MessageTypes.CustomerRegistered:
                         await HandleAsync(messageObject.ToObject<CustomerRegistered>());
                         break;
+					case MessageTypes.NewProductAdded:
+						await HandleAsync(messageObject.ToObject<NewProductAdded>());
+						break;
                 }
             }
             catch(Exception ex)
@@ -78,5 +81,27 @@ namespace OrderAPI.EventHandler
 
             return true; 
         }
-    }
+
+		private async Task<bool> HandleAsync(NewProductAdded e)
+		{
+			Console.WriteLine($"Product created: Customer Id = {e.ProductId}, Name = {e.Name}, Price = {e.Price}, Weight = {e.WeightKg}");
+
+			try
+			{
+				await _dbContext.Products.AddAsync(new Product() {
+					ProductId = e.ProductId,
+					Name = e.Name,
+					Price = e.Price,
+					WeightKg = e.WeightKg
+				});
+				await _dbContext.SaveChangesAsync();
+			}
+			catch (DbUpdateException)
+			{
+				Console.WriteLine($"Skipped adding product with product id {e.ProductId}.");
+			}
+
+			return true;
+		}
+	}
 }
