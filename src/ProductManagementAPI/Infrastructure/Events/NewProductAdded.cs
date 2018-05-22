@@ -18,6 +18,7 @@ namespace ProductManagementAPI.Infrastructure.Events
 			Id = id;
 			Name = name;
 			Price = price;
+			WeightKg = weightkg;
 			Type = type;
 			WeightKg = weightkg;
 		}

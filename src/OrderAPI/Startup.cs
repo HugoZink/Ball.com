@@ -14,6 +14,7 @@ using OrderAPI.Commands;
 using OrderAPI.DataAccess;
 using OrderAPI.Events;
 using OrderAPI.Model;
+using OrderAPI.EventHandler;
 using Pitstop.Infrastructure.Messaging;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
@@ -36,13 +37,14 @@ namespace OrderAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
 			// Add DbContext classes
-			var sqlConnectionString = Configuration.GetConnectionString("LogisticsManagementCN");
-			services.AddDbContext<OrderDbContext>(options =>
-				options.UseSqlServer(sqlConnectionString));
+			var sqlConnectionString = Configuration.GetConnectionString("OrderManagementCN");
+			services.AddDbContext<OrderDbContext>(options => {
+				options.UseSqlServer(sqlConnectionString);
+			});
 
 			// Add messagepublisher classes
 			var configSection = Configuration.GetSection("RabbitMQ");
@@ -64,7 +66,7 @@ namespace OrderAPI
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, OrderDbInitializer dbInit)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, OrderDbContext dbContext, OrderDbInitializer dbInit)
         {
 			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 			loggerFactory.AddDebug();
@@ -89,7 +91,17 @@ namespace OrderAPI
 				app.UseDeveloperExceptionPage();
 			}
 
-			
+			// setup messagehandler
+			var configSection = Configuration.GetSection("RabbitMQ");
+			string host = configSection["Host"];
+			string userName = configSection["UserName"];
+			string password = configSection["Password"];
+			RabbitMQMessageHandler messageHandler = new RabbitMQMessageHandler(host, userName, password, "Ball.com", "OrderAPI", "");
+
+			// start event-handler
+			var eventHandler = new EventHandler.EventHandler(messageHandler, Configuration.GetConnectionString("OrderManagementCN"));
+			eventHandler.Start();
+
 			Policy
 				.Handle<Exception>()
 				.WaitAndRetry(10, r => TimeSpan.FromSeconds(5))
