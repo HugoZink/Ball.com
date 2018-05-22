@@ -45,6 +45,7 @@
 
 		// Warehouse Events
 		OrderPackeged,
+		PackageRegistered,
 
 		// Order commands and events
 		CreateOrder,
@@ -59,5 +60,6 @@
 
 		// Time Events
 		DayHasPassed,
+		DayHasBegun,
 	}
 }

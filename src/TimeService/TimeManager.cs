@@ -8,7 +8,7 @@ namespace Pitstop.TimeService
 {
     public class TimeManager
     {
-        DateTime _lastCheck;
+        TimeSpan start;
         CancellationTokenSource _cancellationTokenSource;
         Task _task;
         IMessagePublisher _messagePublisher;
@@ -17,7 +17,7 @@ namespace Pitstop.TimeService
         public TimeManager(IMessagePublisher messagePublisher)
         {
             _cancellationTokenSource = new CancellationTokenSource();
-            _lastCheck = DateTime.Now;
+            start = new TimeSpan(10, 0, 0);
             _messagePublisher = messagePublisher;
         }
 
@@ -35,14 +35,15 @@ namespace Pitstop.TimeService
         {
             while (true)
             {
-                if (DateTime.Now.Subtract(_lastCheck).Days > 0)
+				TimeSpan now = DateTime.Now.TimeOfDay;
+
+				if (start == now)
                 {
-                    Console.WriteLine($"Day has passed!");
-                    _lastCheck = DateTime.Now;
-                    DateTime passedDay = _lastCheck.AddDays(-1);
-                    DayHasPassed e = new DayHasPassed(Guid.NewGuid());
-                    await _messagePublisher.PublishMessageAsync(MessageTypes.DayHasPassed, e, "");
+                    Console.WriteLine($"Day has began!");
+                    DayHasBegun e = new DayHasBegun(Guid.NewGuid());
+                    await _messagePublisher.PublishMessageAsync(MessageTypes.DayHasBegun, e, "");
                 }
+
                 Thread.Sleep(10000);
             }
         }

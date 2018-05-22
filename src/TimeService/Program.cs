@@ -33,7 +33,7 @@ namespace Pitstop.TimeService
             string password = configSection["Password"];
 
             // start time manager
-            RabbitMQMessagePublisher messagePublisher = new RabbitMQMessagePublisher(host, userName, password, "Pitstop");
+            RabbitMQMessagePublisher messagePublisher = new RabbitMQMessagePublisher(host, userName, password, "Ball.com");
             TimeManager manager = new TimeManager(messagePublisher);
             manager.Start();
 

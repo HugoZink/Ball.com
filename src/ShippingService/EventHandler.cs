@@ -1,164 +1,86 @@
-﻿using System;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Pitstop.Infrastructure.Messaging;
 using ShippingService.Events;
 using ShippingService.Models;
 using ShippingService.Repositories;
 using ShippingService.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ShippingService
 {
-    public class EventHandler : IMessageHandlerCallback
-    {
+	public class EventHandler : IMessageHandlerCallback
+	{
 		private IMessagePublisher _messagePublisher;
-		private ICustomerRepository _customerRepository;
-        private IOrderRepository _orderRepository;
-        private IProductRepository _productRepository;
-        private ILogisticsRepository _logisticsRepository;
-        private ILogisticsService _logisticsService;
+		private ILogisticsService _logisticsService;
+		private IPackageRepository _packageRepository;
 
-		public EventHandler(IMessagePublisher messagePublisher, ICustomerRepository customerRepository,
-            IOrderRepository orderRepository, IProductRepository productRepository,
-            ILogisticsRepository logisticsRepository, ILogisticsService logisticsService)
-        {
-            _customerRepository = customerRepository;
-            _orderRepository = orderRepository;
-            _productRepository = productRepository;
-            _logisticsRepository = logisticsRepository;
-            _logisticsService = logisticsService;
+		public EventHandler(IMessagePublisher messagePublisher, ILogisticsService logisticsService, IPackageRepository packageRepository)
+		{
+			_logisticsService = logisticsService;
+			_packageRepository = packageRepository;
 			_messagePublisher = messagePublisher;
 
 		}
 
-        public async Task<bool> HandleMessageAsync(MessageTypes messageType, string message)
-        {
-            var messageObject = MessageSerializer.Deserialize(message);
+		public async Task<bool> HandleMessageAsync(MessageTypes messageType, string message)
+		{
+			var messageObject = MessageSerializer.Deserialize(message);
 
-            switch (messageType)
-            {
-                case MessageTypes.Unknown:
-                    break;
-                case MessageTypes.CustomerRegistered:
-                    await HandleAsync(messageObject.ToObject<CustomerRegistrated>());
-                    break;
-                case MessageTypes.TransportRegistered:
-                    await HandleAsync(messageObject.ToObject<TransportRegistered>());
-                    break;
-                case MessageTypes.TransportUpdated:
-                    await HandleAsync(messageObject.ToObject<TransportUpdated>());
-                    break;
-                case MessageTypes.TransportRemoved:
-                    await HandleAsync(messageObject.ToObject<TransportUpdated>());
-                    break;
-                case MessageTypes.NewProductAdded:
-                    await HandleAsync(messageObject.ToObject<NewProductAdded>());
-                    break;
-                case MessageTypes.ProductUpdated:
-                    await HandleAsync(messageObject.ToObject<ProductUpdated>());
-                    break;
+			switch (messageType)
+			{
+				case MessageTypes.Unknown:
+					break;
 				case MessageTypes.OrderPackeged:
-					await HandlePackageOrdersAndPublishAsync(messageObject.ToObject<OrderPackaged>());
+					await HandlePackageOrdersAsync(messageObject.ToObject<PackageRegistered>());
+					break;
+				case MessageTypes.DayHasBegun:
+					await HandlePackagesAsync(messageObject.ToObject<DayHasBegan>());
 					break;
 				default:
-                    throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
-            }
+					throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
+			}
 
-            // always akcnowledge message - any errors need to be dealt with locally.
-            return true;
-        }
+			// always akcnowledge message - any errors need to be dealt with locally.
+			return true;
+		}
 
-        private async Task<bool> HandleAsync(CustomerRegistrated e)
-        {
-            Console.WriteLine($"Customer registered: Customer Id = {e.Id}, Name = {e.Name}, Adress = {e.Adress}");
+		private async Task<bool> HandlePackagesAsync(DayHasBegan e)
+		{
+			Console.WriteLine($"Day Has Began " + e);
 
-            var newCustomer = new Customer {Id = e.Id, Name = e.Name, Adress = e.Adress};
+			var packageToShip = await _packageRepository.GetPackagesFromYesterdayAsync();
 
-            await _customerRepository.CreateAsync(newCustomer);
+			var shippedOrders = new List<OrderShipped>();
 
-            return true;
-        }
+			foreach (var pp in packageToShip)
+			{
 
-        private async Task<bool> HandleAsync(NewProductAdded e)
-        {
-            var newProduct = new Product {ProductId = e.Id, Name = e.Name};
+				foreach (var ppOrder in pp.Orders)
+				{
+					var trackingCode = _logisticsService.GenerateTrackingCode();
+					var ordersToShip = new Order { OrderId = ppOrder.OrderId, OrderProducts = ppOrder.OrderProducts, TrackingCode = trackingCode };
 
-            await _productRepository.CreateAsync(newProduct);
+					shippedOrders.Add(Mapper.Map<OrderShipped>(ordersToShip));
+					Console.WriteLine($"Order is shipped: " + ordersToShip);
+				}
 
-			Console.WriteLine($"Product added: Id = {e.Id}, Name = {e.Name}");
+				await _packageRepository.SetPackageToShippedAsync(pp.PackageId);
+			}
+
+			// send event
+			await _messagePublisher.PublishMessageAsync(MessageTypes.OrderShipped, shippedOrders, "");
 
 			return true;
-        }
+		}
 
-        private async Task<bool> HandleAsync(ProductUpdated e)
-        {
-            Console.WriteLine($"Product updated: Id = {e.Id}, Name = {e.Name}");
-
-            var newProduct = new Product { ProductId = e.Id, Name = e.Name};
-
-            await _productRepository.UpdateAsync(newProduct);
-
-            return true;
-        }
-
-        private async Task<bool> HandleAsync(TransportRegistered e)
-        {
-            Console.WriteLine($"Logistics added: Id = {e.TransportId}, Name = {e.CompanyName}");
-
-            var newTransport = new Logistics
-            {
-                Id = e.TransportId,
-                Name = e.CompanyName,
-                CountryOfDestination = e.CountryOfDestination,
-                ShippingCost = e.ShippingCost,
-                TypeOfShipment = e.TypeOfShipment,
-                WeightInKgMax = e.WeightInKgMax
-            };
-
-            await _logisticsRepository.CreateAsync(newTransport);
-
-            return true;
-        }
-
-        private async Task<bool> HandleAsync(TransportRemoved e)
-        {
-            Console.WriteLine($"Logistics removed: Id = {e.TransportId}");
-            await _logisticsRepository.RemoveAsync(e.TransportId);
-
-            return true;
-        }
-
-        private async Task<bool> HandleAsync(TransportUpdated e)
-        {
-            Console.WriteLine($"Logistics updated: Id = {e.TransportId}");
-
-            var newTransport = new Logistics
-            {
-                Id = e.TransportId,
-                Name = e.CompanyName,
-                CountryOfDestination = e.CountryOfDestination,
-                ShippingCost = e.ShippingCost,
-                TypeOfShipment = e.TypeOfShipment,
-                WeightInKgMax = e.WeightInKgMax
-            };
-
-            await _logisticsRepository.UpdateAsync(newTransport);
-
-            return true;
-        }
-
-		private async Task<bool> HandlePackageOrdersAndPublishAsync(OrderPackaged e)
+		private async Task<bool> HandlePackageOrdersAsync(PackageRegistered e)
 		{
-			Console.WriteLine($"Recieved order " + e._order);
+			Package package = Mapper.Map<Package>(e);
 
-			var trackingCode = _logisticsService.GenerateTrackingCode();
-
-			Order order = new Order { OrderId = e._order.OrderId, Customer = e._order.Customer, OrderProducts = e._order.OrderProducts, TrackingCode = trackingCode };
-
-			OrderShipped orderShipped = Mapper.Map<OrderShipped>(order);
-			// send event
-			await _messagePublisher.PublishMessageAsync(MessageTypes.OrderShipped, orderShipped, "");
-
+			await _packageRepository.AddPackageAsync(package);
+			Console.WriteLine($"Package added: " + e);
 			return true;
 		}
 	}

@@ -11,5 +11,7 @@ namespace ShippingService.Models
 
 		public string OrderId { get; set; }
 		public Order Order { get; set; }
+
+		public int Quantity { get; set; }
 	}
 }
