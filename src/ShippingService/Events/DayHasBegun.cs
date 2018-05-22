@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ShippingService.Events
 {
-	public class DayHasBegan : Event
+	public class DayHasBegun : Event
     {
-		public DayHasBegan(Guid messageId) : base(messageId, MessageTypes.DayHasBegun)
+		public DayHasBegun(Guid messageId) : base(messageId, MessageTypes.DayHasBegun)
 		{
 		}
 	}

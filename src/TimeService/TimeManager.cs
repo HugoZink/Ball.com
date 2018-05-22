@@ -39,7 +39,7 @@ namespace Pitstop.TimeService
 
 				if (start == now)
                 {
-                    Console.WriteLine($"Day has began!");
+                    Console.WriteLine($"Day has begun!");
                     DayHasBegun e = new DayHasBegun(Guid.NewGuid());
                     await _messagePublisher.PublishMessageAsync(MessageTypes.DayHasBegun, e, "");
                 }

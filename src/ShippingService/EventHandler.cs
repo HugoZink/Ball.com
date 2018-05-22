@@ -36,7 +36,7 @@ namespace ShippingService
 					await HandlePackageOrdersAsync(messageObject.ToObject<PackageRegistered>());
 					break;
 				case MessageTypes.DayHasBegun:
-					await HandlePackagesAsync(messageObject.ToObject<DayHasBegan>());
+					await HandlePackagesAsync(messageObject.ToObject<DayHasBegun>());
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
@@ -46,31 +46,34 @@ namespace ShippingService
 			return true;
 		}
 
-		private async Task<bool> HandlePackagesAsync(DayHasBegan e)
+		private async Task<bool> HandlePackagesAsync(DayHasBegun e)
 		{
-			Console.WriteLine($"Day Has Began " + e);
+			Console.WriteLine($"Day Has Begun " + e);
 
 			var packageToShip = await _packageRepository.GetPackagesFromYesterdayAsync();
 
-			var shippedOrders = new List<OrderShipped>();
-
-			foreach (var pp in packageToShip)
+			if (packageToShip != null)
 			{
+				var shippedOrders = new List<OrderShipped>();
 
-				foreach (var ppOrder in pp.Orders)
+				foreach (var pp in packageToShip)
 				{
-					var trackingCode = _logisticsService.GenerateTrackingCode();
-					var ordersToShip = new Order { OrderId = ppOrder.OrderId, OrderProducts = ppOrder.OrderProducts, TrackingCode = trackingCode };
 
-					shippedOrders.Add(Mapper.Map<OrderShipped>(ordersToShip));
-					Console.WriteLine($"Order is shipped: " + ordersToShip);
+					foreach (var ppOrder in pp.Orders)
+					{
+						var trackingCode = _logisticsService.GenerateTrackingCode();
+						var ordersToShip = new Order { OrderId = ppOrder.OrderId, TrackingCode = trackingCode };
+
+						shippedOrders.Add(Mapper.Map<OrderShipped>(ordersToShip));
+						Console.WriteLine($"Order is shipped: " + ordersToShip);
+					}
+
+					await _packageRepository.SetPackageToShippedAsync(pp.PackageId);
 				}
 
-				await _packageRepository.SetPackageToShippedAsync(pp.PackageId);
+				// send event
+				await _messagePublisher.PublishMessageAsync(MessageTypes.OrderShipped, shippedOrders, "");
 			}
-
-			// send event
-			await _messagePublisher.PublishMessageAsync(MessageTypes.OrderShipped, shippedOrders, "");
 
 			return true;
 		}
