@@ -65,19 +65,40 @@ services:
         ports:
            - "5500:5500"
         environment:
-           - ASPNETCORE_ENVIRONMENT=Production
+          - ASPNETCORE_ENVIRONMENT=Production
+          - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
-    shippingservice:
-        image: pitstop/shippingservice:latest
-        build:
+    logisticsmanagementapi:
+        image: 'pitstop/logisticsmanagementapi:latest'
+        build: 
             context: ./
-            dockerfile: Dockerfile.shipping
-        container_name: shippingservice
+            dockerfile: Dockerfile.logistics
+        container_name: logisticsmanagementapi
         depends_on:
-           - rabbitmq
-           - sqlserver
+            - rabbitmq
+            - sqlserver
+        ports:
+            - '5300:5300'
         environment:
-           - ASPNETCORE_ENVIRONMENT=Production
+            ASPNETCORE_ENVIRONMENT: Production
+            ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+            
+    orderapi:
+        image: 'pitstop/orderapi:latest'
+        build: 
+            context: ./
+            dockerfile: Dockerfile.orders
+        container_name: orderapi
+        depends_on:
+            - rabbitmq
+            - sqlserver
+        ports:
+            - '5600:5600'
+        environment:
+            ASPNETCORE_ENVIRONMENT: Production
+            ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+
+
 
     # auditlogservice:
     #     image: 'pitstop/auditlogservice:latest'
@@ -120,3 +141,4 @@ volumes:
         external: true
     rabbitmqdata:
         external: true
+

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleManagementAPI", "VehicleManagementAPI\VehicleManagementAPI.csproj", "{9C0B9864-8CF3-4352-A84C-BC0521668BCB}"
 EndProject
@@ -43,6 +43,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogisticsManagementAPI", "LogisticsManagementAPI\LogisticsManagementAPI.csproj", "{07A59E4E-361B-497C-ADF7-9751168B8579}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManagementAPI", "ProductManagementAPI\ProductManagementAPI.csproj", "{0107C6E3-22E9-440D-945C-D03CF58E896D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderAPI", "OrderAPI\OrderAPI.csproj", "{3A4B4A43-F9CD-4575-9249-513F6384D800}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService", "ShippingService\ShippingService.csproj", "{6AD859EC-1908-4263-B3DE-125E2A5F62BB}"
 EndProject
@@ -224,6 +226,18 @@ Global
 		{6AD859EC-1908-4263-B3DE-125E2A5F62BB}.Release|x64.Build.0 = Release|Any CPU
 		{6AD859EC-1908-4263-B3DE-125E2A5F62BB}.Release|x86.ActiveCfg = Release|Any CPU
 		{6AD859EC-1908-4263-B3DE-125E2A5F62BB}.Release|x86.Build.0 = Release|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Debug|x64.Build.0 = Debug|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Release|x64.ActiveCfg = Release|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Release|x64.Build.0 = Release|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A4B4A43-F9CD-4575-9249-513F6384D800}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,21 @@
+FROM microsoft/aspnetcore-build:2.0 AS build-env
+WORKDIR /app
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet restore OrderAPI/*.csproj
+RUN dotnet publish OrderAPI/*.csproj -c Release -o out
+
+# Build runtime image
+FROM microsoft/aspnetcore:2.0
+COPY --from=build-env /app/OrderAPI/out .
+
+# Expose ports
+EXPOSE 5600/tcp
+ENV ASPNETCORE_URLS http://*:5600
+
+# Configure environment variables
+ENV WEBSITE_SITE_NAME OrderAPI
+
+# Start
+ENTRYPOINT ["dotnet", "OrderAPI.dll"]
