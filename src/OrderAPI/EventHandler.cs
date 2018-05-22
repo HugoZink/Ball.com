@@ -12,13 +12,13 @@ namespace OrderAPI.EventHandler
 {
     public class EventHandler : IMessageHandlerCallback
     {
-        OrderDbContext _dbContext;
-        IMessageHandler _messageHandler;
+		private string _connectionString;
+		IMessageHandler _messageHandler;
 
-        public EventHandler(IMessageHandler messageHandler, OrderDbContext dbContext)
+        public EventHandler(IMessageHandler messageHandler, string connectionString)
         {
+			_connectionString = connectionString;
             _messageHandler = messageHandler;
-            _dbContext = dbContext;
         }
 
         public void Start()
@@ -60,26 +60,29 @@ namespace OrderAPI.EventHandler
         {
             Console.WriteLine($"Customer registered: Customer Id = {e.CustomerId}, Name = {e.Name}, Telephone Number = {e.TelephoneNumber}");
 
-            try
-            {
-
-
-				await _dbContext.Customers.AddAsync(new Customer
+			using (var db = GetOrderDb())
+			{
+				try
 				{
-					CustomerId = e.CustomerId,
-					Name = e.Name,
-					EmailAddress = e.EmailAddress,
-					Address = e.Address,
-					PostalCode = e.PostalCode,
-					City = e.City,
-                    TelephoneNumber = e.TelephoneNumber
-                });
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                Console.WriteLine($"Skipped adding customer with customer id {e.CustomerId}.");
-            }
+
+
+					await db.Customers.AddAsync(new Customer
+					{
+						CustomerId = e.CustomerId,
+						Name = e.Name,
+						EmailAddress = e.EmailAddress,
+						Address = e.Address,
+						PostalCode = e.PostalCode,
+						City = e.City,
+						TelephoneNumber = e.TelephoneNumber
+					});
+					await db.SaveChangesAsync();
+				}
+				catch (DbUpdateException)
+				{
+					Console.WriteLine($"Skipped adding customer with customer id {e.CustomerId}.");
+				}
+			}
 
             return true; 
         }
@@ -88,22 +91,33 @@ namespace OrderAPI.EventHandler
 		{
 			Console.WriteLine($"Product created: Customer Id = {e.ProductId}, Name = {e.Name}, Price = {e.Price}, Weight = {e.WeightKg}");
 
-			try
+			using (var db = GetOrderDb())
 			{
-				await _dbContext.Products.AddAsync(new Product() {
-					ProductId = e.ProductId,
-					Name = e.Name,
-					Price = e.Price,
-					WeightKg = e.WeightKg
-				});
-				await _dbContext.SaveChangesAsync();
-			}
-			catch (DbUpdateException)
-			{
-				Console.WriteLine($"Skipped adding product with product id {e.ProductId}.");
+				try
+				{
+					await db.Products.AddAsync(new Product()
+					{
+						ProductId = e.ProductId,
+						Name = e.Name,
+						Price = e.Price,
+						WeightKg = e.WeightKg
+					});
+					await db.SaveChangesAsync();
+				}
+				catch (DbUpdateException)
+				{
+					Console.WriteLine($"Skipped adding product with product id {e.ProductId}.");
+				}
 			}
 
 			return true;
+		}
+
+		private OrderDbContext GetOrderDb()
+		{
+			var optionsBuilder = new DbContextOptionsBuilder<OrderDbContext>();
+			optionsBuilder.UseSqlServer(_connectionString);
+			return new OrderDbContext(optionsBuilder.Options);
 		}
 	}
 }
