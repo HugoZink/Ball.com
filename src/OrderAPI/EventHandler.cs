@@ -62,6 +62,8 @@ namespace OrderAPI.EventHandler
 
             try
             {
+
+
 				await _dbContext.Customers.AddAsync(new Customer
 				{
 					CustomerId = e.CustomerId,
