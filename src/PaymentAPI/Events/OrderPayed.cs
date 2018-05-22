@@ -8,8 +8,13 @@ namespace PaymentAPI.Events
 {
 	public class OrderPayed : Event
 	{
-		public OrderPayed(Guid messageId, MessageTypes messageType) : base(messageId, MessageTypes.OrderPayed)
+		readonly string _orderId;
+		readonly string _bank;
+
+		public OrderPayed(Guid messageId, string orderId, string bank) : base(messageId, MessageTypes.OrderPayed)
 		{
+			_orderId = orderId;
+			_bank = bank;
 		}
 	}
 }
