@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PaymentAPI.Events
+namespace OrderAPI.Events
 {
 	public class OrderPayed : Event
 	{

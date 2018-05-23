@@ -44,6 +44,9 @@ namespace OrderAPI.EventHandler
 					case MessageTypes.NewProductAdded:
 						await HandleAsync(messageObject.ToObject<NewProductAdded>());
 						break;
+					case MessageTypes.OrderPayed:
+						await HandleAsync(messageObject.ToObject<OrderPayed>());
+						break;
                 }
             }
             catch(Exception ex)
@@ -107,6 +110,33 @@ namespace OrderAPI.EventHandler
 				catch (DbUpdateException)
 				{
 					Console.WriteLine($"Skipped adding product with product id {e.ProductId}.");
+				}
+			}
+
+			return true;
+		}
+
+		private async Task<bool> HandleAsync(OrderPayed e)
+		{
+			Console.WriteLine($"Order paid: Order Id = {e._orderId}, Bank = {e._bank}");
+
+			using (var db = GetOrderDb())
+			{
+				try
+				{
+					var order = await db.Orders.FirstOrDefaultAsync(o => o.OrderId == e._orderId);
+					if(order == null)
+					{
+						throw new KeyNotFoundException($"Order with ID {e._orderId} not found");
+					}
+
+					order.AddStateChange(OrderState.PAYMENTCOMPLETE);
+
+					await db.SaveChangesAsync();
+				}
+				catch (DbUpdateException)
+				{
+					Console.WriteLine($"Skipped paying order with order id {e._orderId}.");
 				}
 			}
 

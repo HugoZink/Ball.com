@@ -48,6 +48,8 @@ namespace OrderAPI.Controllers
         public async Task<IActionResult> CreateOrder()
         {
 			var order = new Order();
+			order.AddStateChange(OrderState.PENDING);
+
 			_dbContext.Orders.Add(order);
 			await _dbContext.SaveChangesAsync();
 
@@ -101,11 +103,11 @@ namespace OrderAPI.Controllers
 
 			if(order.AfterPayment)
 			{
-				order.State = OrderState.AWAITINGAFTERPAYMENT;
+				order.AddStateChange(OrderState.AWAITINGAFTERPAYMENT);
 			}
 			else
 			{
-				order.State = OrderState.PAYMENTINPROGRESS;
+				order.AddStateChange(OrderState.PAYMENTINPROGRESS);
 			}
 
 			await _dbContext.SaveChangesAsync();
@@ -155,7 +157,7 @@ namespace OrderAPI.Controllers
 				return NotFound();
 			}
 
-			if(order.State != OrderState.PENDING)
+			if(order.CurrentState != OrderState.PENDING)
 			{
 				return BadRequest("Cannot delete a non-pending order.");
 			}
