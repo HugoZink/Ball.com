@@ -11,7 +11,7 @@ using System;
 namespace LogisticsManagementAPI.Migrations
 {
     [DbContext(typeof(LogisticsManagementDbContext))]
-    [Migration("20180512225805_InitialCreate")]
+    [Migration("20180522225127_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,9 +26,9 @@ namespace LogisticsManagementAPI.Migrations
                     b.Property<string>("TransportId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CompanyName");
+                    b.Property<string>("CityOfDestination");
 
-                    b.Property<string>("CountryOfDestination");
+                    b.Property<string>("CompanyName");
 
                     b.Property<string>("Description");
 

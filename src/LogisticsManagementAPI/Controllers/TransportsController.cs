@@ -82,7 +82,7 @@ namespace LogisticsManagementAPI.Controllers
                     // Update Transport
                     transport.CompanyName = command.CompanyName;
                     transport.TypeOfShipment = command.TypeOfShipment;
-                    transport.CountryOfDestination = command.CountryOfDestination;
+                    transport.CityOfDestination = command.CityOfDestination;
                     transport.Description = command.Description;
                     transport.WeightInKgMax = command.WeightInKgMax;
                     transport.ShippingCost = command.ShippingCost;
