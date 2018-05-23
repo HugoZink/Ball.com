@@ -16,7 +16,7 @@ namespace OrderAPI.Model
 
 		public string TrackingCode { get; set; }
 
-		public string State { get; set; }
+		public List<OrderStateChange> StateChanges { get; set; }
 
 		public List<OrderProduct> OrderProducts { get; set; }
 
@@ -37,10 +37,48 @@ namespace OrderAPI.Model
 			}
 		}
 
+		[NotMapped]
+		public string CurrentState
+		{
+			get
+			{
+				return StateChanges.OrderBy(s => s.Version).Last().State;
+			}
+		}
+
+		[NotMapped]
+		public OrderStateChange LastStateChange
+		{
+			get
+			{
+				return StateChanges.OrderBy(s => s.Version).Last();
+			}
+		}
+
 		public Order()
 		{
 			this.OrderProducts = new List<OrderProduct>();
-			this.State = OrderState.PENDING;
+			this.StateChanges = new List<OrderStateChange>();
+		}
+
+		public void AddStateChange(string newState)
+		{
+			int newVersion;
+			var lastState = LastStateChange;
+			if(lastState == null)
+			{
+				newVersion = 1;
+			}
+			else
+			{
+				newVersion = lastState.Version + 1;
+			}
+
+			this.StateChanges.Add(new OrderStateChange()
+			{
+				State = newState,
+				Version = newVersion
+			});
 		}
     }
 
