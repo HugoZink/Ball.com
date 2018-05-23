@@ -23,16 +23,6 @@
 		TransportUpdated,
 		TransportRemoved,
 
-		// Vehicle Commands and Events
-		VehicleRegistered,
-		WorkshopPlanningCreated,
-		MaintenanceJobPlanned,
-		MaintenanceJobFinished,
-
-		RegisterVehicle,
-		PlanMaintenanceJob,
-		FinishMaintenanceJob,
-
 		// Products Commands and Events
 		AddProduct,
 		UpdateProduct,
