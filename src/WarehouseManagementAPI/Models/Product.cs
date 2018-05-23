@@ -9,6 +9,7 @@ namespace WarehouseManagementAPI.Models
     public class Product
     {
         public string ProductId { get; set; }
+        public string Name { get; set; }
         public decimal Weight { get; set; }
         public int Amount { get; set; }
 

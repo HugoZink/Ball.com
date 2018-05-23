@@ -13,7 +13,10 @@ namespace WarehouseManagementAPI.Migrations
                 columns: table => new
                 {
                     CustomerId = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Address = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    PostalCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,6 +29,7 @@ namespace WarehouseManagementAPI.Migrations
                 {
                     ProductId = table.Column<string>(nullable: false),
                     Amount = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
                     Weight = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
@@ -38,8 +42,8 @@ namespace WarehouseManagementAPI.Migrations
                 columns: table => new
                 {
                     TransportId = table.Column<string>(nullable: false),
+                    CityOfDestination = table.Column<string>(nullable: true),
                     CompanyName = table.Column<string>(nullable: true),
-                    CountryOfDestination = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ShippingCost = table.Column<decimal>(nullable: false),
                     TypeOfShipment = table.Column<string>(nullable: true),

@@ -52,13 +52,15 @@ namespace WarehouseManagementAPI
             services.AddTransient<ITransportRepository>((sp) =>
                 new EFTransportRepository(sp.GetService<WarehouseManagementDbContext>()));
 
-            // Add messagepublisher classes
+            // Setup RabbitMQ
             var configSection = Configuration.GetSection("RabbitMQ");
             string host = configSection["Host"];
             string userName = configSection["UserName"];
             string password = configSection["Password"];
 
-            // Setup messagepublisher
+            // Setup messagehandler and messagepublisher
+            services.AddTransient<IMessageHandler>((sp) =>
+                new RabbitMQMessageHandler(host, userName, password, "Ball.com", "WarehouseManagement", ""));
             services.AddTransient<IMessagePublisher>((sp) =>
                 new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
 
@@ -73,7 +75,7 @@ namespace WarehouseManagementAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMessageHandler messageHandler)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -92,6 +94,11 @@ namespace WarehouseManagementAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WarehouseManagement API - v1");
             });
+
+            // Start warehouse manager
+            var sqlConnectionString = Configuration.GetConnectionString("WarehouseManagementCN");
+            Manager manager = new Manager(messageHandler, sqlConnectionString);
+            manager.Start();
 
             if (env.IsDevelopment())
             {

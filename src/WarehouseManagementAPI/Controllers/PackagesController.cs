@@ -188,9 +188,10 @@ namespace WarehouseManagementAPI.Controllers
                     // (NOTE: Only "ShippingStatus", "BarcodeNumber", "Delivered" and "Transport")
                     package.BarcodeNumber = command.BarcodeNumber;
 
-                    // Check
+                    // Check if "ShippingStatus" is "IN STOCK" and transport choice is not null
                     if (package.ShippingStatus == "IN STOCK" && command.Transport != null)
                     {
+                        // (NOTE: If transport choice is in the available list of transports update the package
                         if (transports.Count() != 0 && transport != null && transports.Any(t => t == transport))
                         {
                             package.ShippingStatus = "ISSUE";
@@ -205,7 +206,7 @@ namespace WarehouseManagementAPI.Controllers
 
                     await _packageRepo.UpdatePackageAsync();
 
-                    if (packageIsIssued == true && transportIsChecked)
+                    if (packageIsIssued == true && transportIsChecked == true)
                     {
                         // Send Event
                         RegisterPackage c = Mapper.Map<RegisterPackage>(package);

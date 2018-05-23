@@ -25,7 +25,13 @@ namespace WarehouseManagementAPI.Migrations
                     b.Property<string>("CustomerId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Address");
+
+                    b.Property<string>("City");
+
                     b.Property<string>("Name");
+
+                    b.Property<string>("PostalCode");
 
                     b.HasKey("CustomerId");
 
@@ -128,6 +134,8 @@ namespace WarehouseManagementAPI.Migrations
 
                     b.Property<int>("Amount");
 
+                    b.Property<string>("Name");
+
                     b.Property<decimal>("Weight");
 
                     b.HasKey("ProductId");
@@ -140,9 +148,9 @@ namespace WarehouseManagementAPI.Migrations
                     b.Property<string>("TransportId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CompanyName");
+                    b.Property<string>("CityOfDestination");
 
-                    b.Property<string>("CountryOfDestination");
+                    b.Property<string>("CompanyName");
 
                     b.Property<string>("Description");
 

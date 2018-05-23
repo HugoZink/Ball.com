@@ -30,7 +30,7 @@ namespace WarehouseManagementAPI.Repositories.Implementations
 
             var transports = await _dbContext.Transports
                 .Where(t => package.TypeOfPackage == t.Description)
-                .Where(t => package.Region == t.CountryOfDestination)
+                .Where(t => package.Region == t.CityOfDestination)
                 .Where(t => package.WeightInKgMax <= t.WeightInKgMax)
                 .OrderBy(t => t.ShippingCost)
                 .ToListAsync();
