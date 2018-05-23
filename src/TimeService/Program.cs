@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Pitstop.Infrastructure.Messaging;
+using Pitstop.TimeService.Events;
 using System;
 using System.IO;
 using System.Threading;
@@ -33,11 +34,11 @@ namespace Pitstop.TimeService
             string password = configSection["Password"];
 
             // start time manager
-            RabbitMQMessagePublisher messagePublisher = new RabbitMQMessagePublisher(host, userName, password, "Pitstop");
+            RabbitMQMessagePublisher messagePublisher = new RabbitMQMessagePublisher(host, userName, password, "Ball.com");
             TimeManager manager = new TimeManager(messagePublisher);
             manager.Start();
 
-            if (_env == "Development")
+			if (_env == "Development")
             {
                 Console.WriteLine("Time service started. Press any key to stop...");
                 Console.ReadKey(true);
