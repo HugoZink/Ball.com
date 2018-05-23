@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pitstop.Infrastructure.Messaging;
+using Polly;
 using ProductManagementAPI.Database;
 using ProductManagementAPI.Infrastructure.Commands;
 using ProductManagementAPI.Infrastructure.Database;
@@ -17,27 +19,27 @@ using System;
 namespace ProductManagementAPI
 {
 	public class Startup
-    {
-	    public Startup(IHostingEnvironment env)
-	    {
-		    var builder = new ConfigurationBuilder()
-			    .SetBasePath(env.ContentRootPath)
-			    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-			    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-			    .AddEnvironmentVariables();
-		    Configuration = builder.Build();
-	    }
+	{
+		public Startup(IHostingEnvironment env)
+		{
+			var builder = new ConfigurationBuilder()
+				.SetBasePath(env.ContentRootPath)
+				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+				.AddEnvironmentVariables();
+			Configuration = builder.Build();
+		}
 
 		public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+		{
+			Configuration = configuration;
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
 
 			// add DBContext classes
 			var sqlConnectionString = Configuration.GetConnectionString("ProductManagementCN");
@@ -45,31 +47,30 @@ namespace ProductManagementAPI
 
 			// add messagepublisher classes
 			var configSection = Configuration.GetSection("RabbitMQ");
-	        string host = configSection["Host"];
-	        string userName = configSection["UserName"];
-	        string password = configSection["Password"];
-	        services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
-	        services.AddTransient<IProductRepository, EFProductRepository>();
-	        services.AddTransient<ProductDbSeeder>();
+			string host = configSection["Host"];
+			string userName = configSection["UserName"];
+			string password = configSection["Password"];
+			services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
+			services.AddTransient<IProductRepository, EFProductRepository>();
 
 			services.AddMvc();
 
 			// Register the Swagger generator, defining one or more Swagger documents
 			services.AddSwaggerGen(c =>
 			{
-				c.SwaggerDoc("v1", new Info { Title = "VehicleManagement API", Version = "v1" });
+				c.SwaggerDoc("v1", new Info { Title = "ProductManagement API", Version = "v1" });
 			});
 		}
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProductDbSeeder seeder)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProductDbContext context)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
 
-            app.UseMvc();
+			app.UseMvc();
 
 
 			SetupAutoMapper();
@@ -83,7 +84,13 @@ namespace ProductManagementAPI
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductManagement API - v1");
 			});
 
-			seeder.Seed().Wait();
+			Policy
+				.Handle<Exception>()
+				.WaitAndRetry(10, r => TimeSpan.FromSeconds(10))
+				.Execute(() =>
+				{
+					ProductDbSeeder.Seed(context);
+				});
 		}
 
 		private void SetupAutoMapper()
@@ -94,6 +101,8 @@ namespace ProductManagementAPI
 				cfg.CreateMap<AddProduct, Product>();
 				cfg.CreateMap<UpdateProduct, Product>();
 				cfg.CreateMap<AddProduct, NewProductAdded>()
+					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+				cfg.CreateMap<UpdateProduct, ProductUpdated>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
 				cfg.CreateMap<UpdateProduct, ProductUpdated>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));

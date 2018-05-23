@@ -5,62 +5,67 @@
     /// </summary>
     public enum MessageTypes
     {
-        // General Comamnds or Events
-        Unknown,
+		// General Comamnds or Events
+		Unknown,
 
-        // Customer Commands and Events
-        RegisterCustomer,
-        CustomerRegistered,
-        SupportMessageSent,
-        SendSupportMessage,
+		// Customer Commands and Events
+		RegisterCustomer,
+		CustomerRegistered,
+		SupportMessageSent,
+		SendSupportMessage,
 
-        // Logistics Commands and Events
-        RegisterTransport,
-        UpdateTransport,
-        RemoveTransport,
+		// Logistics Commands and Events
+		RegisterTransport,
+		UpdateTransport,
+		RemoveTransport,
 
-        TransportRegistered,
-        TransportUpdated,
-        TransportRemoved,
+		TransportRegistered,
+		TransportUpdated,
+		TransportRemoved,
 
-        // Vehicle Commands and Events
-        VehicleRegistered,
-        WorkshopPlanningCreated,
-        MaintenanceJobPlanned,
-        MaintenanceJobFinished,
+		// Vehicle Commands and Events
+		VehicleRegistered,
+		WorkshopPlanningCreated,
+		MaintenanceJobPlanned,
+		MaintenanceJobFinished,
 
-        RegisterVehicle,
-        PlanMaintenanceJob,
-        FinishMaintenanceJob,
+		RegisterVehicle,
+		PlanMaintenanceJob,
+		FinishMaintenanceJob,
 
-        // Products Commands and Events
-        AddProduct,
-        UpdateProduct,
+		// Products Commands and Events
+		AddProduct,
+		UpdateProduct,
 
-        NewProductAdded,
-        ProductUpdated,
+		NewProductAdded,
+		ProductUpdated,
 
-        // Order commands and events
-        CreateOrder,
-        UpdateOrder,
-        DeleteOrder,
-        PlaceOrder,
+		// Order commands and events
+		CreateOrder,
+		UpdateOrder,
+		DeleteOrder,
+		PlaceOrder,
 
-        OrderCreated,
-        OrderUpdated,
-        OrderDeleted,
-        OrderPlaced,
+		OrderCreated,
+		OrderUpdated,
+		OrderDeleted,
+		OrderPlaced,
 
-        // Payment Commands and Events
-        PayOrder,
-        OrderPayed,
+		// Payment Commands and Events
+		PayOrder,
+		OrderPayed,
 
-        // Warehouse Commands and Events
-        RegisterPackage,
+		// Shipping Events and Commands
+		OrderShipped,
+		ShipOrder,
 
-        PackageRegistered,
+		// Warehouse Commands and Events
+		RegisterPackage,
 
-        // Time Events
-        DayHasPassed,
+		PackageRegistered,
+
+		// Time Events
+		DayHasPassed,
+		DayHasBegun,
     }
 }
