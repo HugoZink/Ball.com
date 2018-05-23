@@ -120,33 +120,33 @@ services:
         environment:
            - ASPNETCORE_ENVIRONMENT=Production
     
-    auditlogservice:
-        image: 'pitstop/auditlogservice:latest'
-        build: AuditlogService
-        container_name: auditlogservice
-        depends_on:
-            - rabbitmq
-        environment:
-            PITSTOP_ENVIRONMENT: Production
-    invoiceservice:
-        image: 'pitstop/invoiceservice:latest'
-        build: InvoiceService
-        container_name: invoiceservice
-        depends_on:
-            - rabbitmq
-            - sqlserver
-        environment:
-            PITSTOP_ENVIRONMENT: Production
-    notificationservice:
-        image: 'pitstop/notificationservice:latest'
-        build: NotificationService
-        container_name: notificationservice
-        depends_on:
-            - rabbitmq
-            - sqlserver
-            - mailserver
-        environment:
-            PITSTOP_ENVIRONMENT: Production
+    #auditlogservice:
+    #    image: 'pitstop/auditlogservice:latest'
+    #    build: AuditlogService
+    #    container_name: auditlogservice
+    #    depends_on:
+    #        - rabbitmq
+    #    environment:
+    #        PITSTOP_ENVIRONMENT: Production
+    #invoiceservice:
+    #    image: 'pitstop/invoiceservice:latest'
+    #    build: InvoiceService
+    #    container_name: invoiceservice
+    #    depends_on:
+    #        - rabbitmq
+    #        - sqlserver
+    #    environment:
+    #        PITSTOP_ENVIRONMENT: Production
+    #notificationservice:
+    #    image: 'pitstop/notificationservice:latest'
+    #    build: NotificationService
+    #    container_name: notificationservice
+    #    depends_on:
+    #        - rabbitmq
+    #        - sqlserver
+    #        - mailserver
+    #    environment:
+    #        PITSTOP_ENVIRONMENT: Production
     timeservice:
         image: 'pitstop/timeservice:latest'
         build: TimeService
