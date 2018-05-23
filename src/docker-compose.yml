@@ -37,7 +37,7 @@ services:
         environment:
           - ASPNETCORE_ENVIRONMENT=Production
           - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
-    
+
     logisticsmanagementapi:
         image: 'pitstop/logisticsmanagementapi:latest'
         build: 
@@ -52,7 +52,7 @@ services:
         environment:
             ASPNETCORE_ENVIRONMENT: Production
             ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
-          
+
     orderapi:
         image: 'pitstop/orderapi:latest'
         build: 
@@ -67,7 +67,7 @@ services:
         environment:
             ASPNETCORE_ENVIRONMENT: Production
             ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
-    
+
     warehousemanagementapi:
         image: 'pitstop/warehousemanagementapi:latest'
         build: 
@@ -105,7 +105,7 @@ services:
             - '5900:5900'
         environment:
             ASPNETCORE_ENVIRONMENT: Production
-    
+
     productmanagementapi:
         image: pitstop/productmanagementapi:latest
         build:
@@ -119,7 +119,7 @@ services:
            - "5500:5500"
         environment:
            - ASPNETCORE_ENVIRONMENT=Production
-    
+
     #auditlogservice:
     #    image: 'pitstop/auditlogservice:latest'
     #    build: AuditlogService
@@ -148,14 +148,16 @@ services:
     #    environment:
     #        PITSTOP_ENVIRONMENT: Production
 
-    #timeservice:
-    #    image: 'pitstop/timeservice:latest'
-    #    build: TimeService
-    #    container_name: timeservice
-    #    depends_on:
-    #        - rabbitmq
-    #    environment:
-    #        PITSTOP_ENVIRONMENT: Production
+    timeservice:
+        image: 'pitstop/timeservice:latest'
+        build:
+            context: ./
+            dockerfile: Dockerfile.time
+        container_name: timeservice
+        depends_on:
+           - rabbitmq
+        environment:
+           PITSTOP_ENVIRONMENT: Production
 
 volumes:
     sqlserverdata:
