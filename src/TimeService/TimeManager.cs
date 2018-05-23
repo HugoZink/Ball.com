@@ -33,9 +33,6 @@ namespace Pitstop.TimeService
 
         private async void Worker()
         {
-			DayHasBegun e = new DayHasBegun(Guid.NewGuid());
-			await _messagePublisher.PublishMessageAsync(MessageTypes.DayHasBegun, e, "");
-
 			while (true)
             {
 				TimeSpan now = DateTime.Now.TimeOfDay;
@@ -43,9 +40,9 @@ namespace Pitstop.TimeService
 				if (start == now)
                 {
                     Console.WriteLine($"Day has begun!");
-                    //DayHasBegun e = new DayHasBegun(Guid.NewGuid());
-                    //await _messagePublisher.PublishMessageAsync(MessageTypes.DayHasBegun, e, "");
-                }
+					DayHasBegun e = new DayHasBegun(Guid.NewGuid());
+					await _messagePublisher.PublishMessageAsync(MessageTypes.DayHasBegun, e, "");
+				}
 
                 Thread.Sleep(10000);
             }
