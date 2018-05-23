@@ -1,0 +1,21 @@
+FROM microsoft/aspnetcore-build:2.0 AS build-env
+WORKDIR /app
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet restore CustomerManagementAPI/*.csproj
+RUN dotnet publish CustomerManagementAPI/*.csproj -c Release -o out
+
+# Build runtime image
+FROM microsoft/aspnetcore:2.0
+COPY --from=build-env /app/CustomerManagementAPI/out .
+
+# Expose ports
+EXPOSE 5100/tcp
+ENV ASPNETCORE_URLS http://*:5100
+
+# Configure environment variables
+ENV WEBSITE_SITE_NAME CustomerManagementAPI
+
+# Start
+ENTRYPOINT ["dotnet", "Pitstop.CustomerManagementAPI.dll"]

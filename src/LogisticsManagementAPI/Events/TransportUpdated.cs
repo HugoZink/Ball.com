@@ -11,19 +11,19 @@ namespace LogisticsManagementAPI.Events
         public readonly string TransportId;
         public readonly string CompanyName;
         public readonly string TypeOfShipment;
-        public readonly string CountryOfDestination;
+        public readonly string CityOfDestination;
         public readonly string Description;
         public readonly decimal WeightInKgMax;
         public readonly decimal ShippingCost;
 
         public TransportUpdated(Guid messageId, string transportId, string companyName, string typeOfShipment,
-            string countryOfDestination, string description, decimal weightInKgMax,
+            string cityOfDestination, string description, decimal weightInKgMax,
             decimal shippingCost) : base(messageId, MessageTypes.TransportUpdated)
         {
             TransportId = transportId;
             CompanyName = companyName;
             TypeOfShipment = typeOfShipment;
-            CountryOfDestination = countryOfDestination;
+            CityOfDestination = cityOfDestination;
             Description = description;
             WeightInKgMax = weightInKgMax;
             ShippingCost = shippingCost;

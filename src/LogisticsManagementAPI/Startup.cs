@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pitstop.Infrastructure.Messaging;
+using Polly;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace LogisticsManagementAPI
@@ -85,12 +87,20 @@ namespace LogisticsManagementAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "LogisticsManagement API - v1");
             });
 
+            // Setup Seed data
+            // (NOTE: Comment this code when adding a new migration in a empty folder)
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(10, r => TimeSpan.FromSeconds(5))
+                .Execute(() =>
+                {
+                    dbInit.Seed().Wait();
+                });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            dbInit.Seed().Wait();
         }
 
         private void SetupAutoMapper()

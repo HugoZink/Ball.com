@@ -10,8 +10,9 @@
 
         // Customer Commands and Events
         RegisterCustomer,
-
         CustomerRegistered,
+        SupportMessageSent,
+        SendSupportMessage,
 
         // Logistics Commands and Events
         RegisterTransport,
@@ -23,17 +24,41 @@
         TransportRemoved,
 
         // Vehicle Commands and Events
-        RegisterVehicle,
-
         VehicleRegistered,
-
-        // Workshop Commands and Events
-        PlanMaintenanceJob,
-        FinishMaintenanceJob,
-
         WorkshopPlanningCreated,
         MaintenanceJobPlanned,
         MaintenanceJobFinished,
+
+        RegisterVehicle,
+        PlanMaintenanceJob,
+        FinishMaintenanceJob,
+
+        // Products Commands and Events
+        AddProduct,
+        UpdateProduct,
+
+        NewProductAdded,
+        ProductUpdated,
+
+        // Order commands and events
+        CreateOrder,
+        UpdateOrder,
+        DeleteOrder,
+        PlaceOrder,
+
+        OrderCreated,
+        OrderUpdated,
+        OrderDeleted,
+        OrderPlaced,
+
+        // Payment Commands and Events
+        PayOrder,
+        OrderPayed,
+
+        // Warehouse Commands and Events
+        RegisterPackage,
+
+        PackageRegistered,
 
         // Time Events
         DayHasPassed,

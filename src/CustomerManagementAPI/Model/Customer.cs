@@ -13,5 +13,7 @@ namespace Pitstop.CustomerManagementAPI.Model
         public string City { get; set; }
         public string TelephoneNumber { get; set; }
         public string EmailAddress { get; set; }
+
+		public List<SupportMessage> SupportMessages { get; set; }
     }
 }
