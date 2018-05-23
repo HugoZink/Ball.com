@@ -45,7 +45,7 @@ namespace OrderAPI.EventHandler
 						await HandleAsync(messageObject.ToObject<NewProductAdded>());
 						break;
 					case MessageTypes.OrderPayed:
-						await HandleAsync(messageObject.ToObject<OrderPayed>();)
+						await HandleAsync(messageObject.ToObject<OrderPayed>());
 						break;
                 }
             }
