@@ -82,7 +82,17 @@ services:
     #     environment:
     #         ASPNETCORE_ENVIRONMENT: Production
     #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
-
+     shippingservice:
+           image: 'pitstop/shippingservice:latest'
+           build:
+                context: ./
+                dockerfile: Dockerfile.shipping
+           container_name: shippingservice
+           depends_on:
+                - rabbitmq
+                - sqlserver
+           environment:
+                ASPNETCORE_ENVIRONMENT: Production
     # paymentapi:
     #     image: 'pitstop/paymentapi:latest'
     #     build:
@@ -97,18 +107,18 @@ services:
     #         ASPNETCORE_ENVIRONMENT: Production
 
     # productmanagementapi:
-        # image: pitstop/productmanagementapi:latest
-        # build:
-            # context: ./
-            # dockerfile: Dockerfile.product
-        # container_name: productmanagementapi
-        # depends_on:
-           # - rabbitmq
-           # - sqlserver
-        # ports:
-           # - "5500:5500"
-        # environment:
-           # - ASPNETCORE_ENVIRONMENT=Production
+    #     image: pitstop/productmanagementapi:latest
+    #     build:
+    #         context: ./
+    #         dockerfile: Dockerfile.product
+    #     container_name: productmanagementapi
+    #     depends_on:
+    #        - rabbitmq
+    #        - sqlserver
+    #     ports:
+    #        - "5500:5500"
+    #     environment:
+    #        - ASPNETCORE_ENVIRONMENT=Production
 
     # auditlogservice:
     #     image: 'pitstop/auditlogservice:latest'
@@ -138,18 +148,17 @@ services:
     #     environment:
     #         PITSTOP_ENVIRONMENT: Production
     # timeservice:
-        # image: 'pitstop/timeservice:latest'
-        # build:
-            # context: ./
-            # dockerfile: Dockerfile.time
-        # container_name: timeservice
-        # depends_on:
-            # - rabbitmq
-        # environment:
-            # PITSTOP_ENVIRONMENT: Production
+    #     image: 'pitstop/timeservice:latest'
+    #     build: TimeService
+    #     container_name: timeservice
+    #     depends_on:
+    #         - rabbitmq
+    #     environment:
+    #         PITSTOP_ENVIRONMENT: Production
 
 volumes:
     sqlserverdata:
         external: true
     rabbitmqdata:
         external: true
+
