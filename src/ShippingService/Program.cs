@@ -6,10 +6,8 @@ using Pitstop.Infrastructure.Messaging;
 using ShippingService.Commands;
 using ShippingService.Events;
 using ShippingService.Infrastructure.Database;
-using ShippingService.Infrastructure.Repositories;
 using ShippingService.Infrastructure.Services;
 using ShippingService.Models;
-using ShippingService.Repositories;
 using ShippingService.Services;
 using System;
 using System.IO;
@@ -49,9 +47,9 @@ namespace ShippingService
 			//...add any other services needed
 			//services.AddTransient<IProductRepository, ProductRepository>();
 			//services.AddTransient<ICustomerRepository, CustomerRepository>();
-			services.AddTransient<IOrderRepository, EFOrderRepository>();
+			//services.AddTransient<IOrderRepository, EFOrderRepository>();
 			//services.AddTransient<ILogisticsRepository, LogisticsRepository>();
-			services.AddTransient<IPackageRepository, EFPackageRepository>();
+			//services.AddTransient<IPackageRepository, EFPackageRepository>();
 
 			services.AddTransient<ILogisticsService, LogisticsService>();
 
@@ -69,6 +67,7 @@ namespace ShippingService
 			RabbitMQMessageHandler messageHandler = new RabbitMQMessageHandler(host, userName, password, "Ball.com", "OrderAPI", "");
 
 			var dbContext = serviceProvider.GetService<ShippingDbContext>();
+
 			var messagePublisher = serviceProvider.GetService<IMessagePublisher>();
 			var logisticsService = serviceProvider.GetService<ILogisticsService>();
 

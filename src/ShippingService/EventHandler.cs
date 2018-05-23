@@ -5,10 +5,8 @@ using Pitstop.Infrastructure.Messaging;
 using ShippingService.Events;
 using ShippingService.Infrastructure.Database;
 using ShippingService.Models;
-using ShippingService.Repositories;
 using ShippingService.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
