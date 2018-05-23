@@ -17,8 +17,12 @@ namespace ShippingService.Models
 
 		public string Transport { get; set; }
 
-		[NotMapped]
 		public List<Order> Orders { get; set; }
+
+		// Ef needs a parameterless constructor
+		public Package()
+		{
+		}
 
 		public Package(string transport)
 		{

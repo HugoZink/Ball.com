@@ -53,7 +53,8 @@ namespace ShippingService.Infrastructure.Repositories
 		public async Task<IEnumerable<Package>> GetPackagesFromYesterdayAsync()
 		{
 
-			var packages = await _context.Package.Where(p => p.TimeOfRecieve.Date == DateTime.Now.AddDays(-1).Date && p.Shipped !=false).ToListAsync();
+			//var packages = await _context.Package.Where(p => p.TimeOfRecieve.Date == DateTime.Now.Date.AddDays(-1) && p.Shipped !=false).ToListAsync();
+			var packages = await _context.Package.Where(p => p.TimeOfRecieve.Date == DateTime.Now.Date.AddDays(-1) && p.Shipped == false).ToListAsync();
 
 			return packages;
 		}

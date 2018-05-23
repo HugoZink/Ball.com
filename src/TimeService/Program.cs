@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Pitstop.Infrastructure.Messaging;
+using Pitstop.TimeService.Events;
 using System;
 using System.IO;
 using System.Threading;
@@ -37,7 +38,7 @@ namespace Pitstop.TimeService
             TimeManager manager = new TimeManager(messagePublisher);
             manager.Start();
 
-            if (_env == "Development")
+			if (_env == "Development")
             {
                 Console.WriteLine("Time service started. Press any key to stop...");
                 Console.ReadKey(true);
