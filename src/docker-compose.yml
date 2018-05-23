@@ -147,14 +147,15 @@ services:
     #        - mailserver
     #    environment:
     #        PITSTOP_ENVIRONMENT: Production
-    timeservice:
-        image: 'pitstop/timeservice:latest'
-        build: TimeService
-        container_name: timeservice
-        depends_on:
-            - rabbitmq
-        environment:
-            PITSTOP_ENVIRONMENT: Production
+
+    #timeservice:
+    #    image: 'pitstop/timeservice:latest'
+    #    build: TimeService
+    #    container_name: timeservice
+    #    depends_on:
+    #        - rabbitmq
+    #    environment:
+    #        PITSTOP_ENVIRONMENT: Production
 
 volumes:
     sqlserverdata:
