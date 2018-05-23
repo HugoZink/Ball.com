@@ -15,16 +15,17 @@ namespace ShippingService.Models
 		public DateTime TimeOfRecieve { get; set; }
 		public bool Shipped { get; set; }
 
-		public Transport Transport { get; set; }
+		public string Transport { get; set; }
 
 		[NotMapped]
 		public List<Order> Orders { get; set; }
 
-		public Package()
+		public Package(string transport)
 		{
 			Shipped = false;
 			Orders = new List<Order>();
-			TimeOfRecieve = new DateTime();
+			TimeOfRecieve = DateTime.Now;
+			Transport = transport;
 		}
 	}
 }

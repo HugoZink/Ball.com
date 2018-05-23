@@ -8,6 +8,7 @@ using ShippingService.Events;
 using ShippingService.Infrastructure.Database;
 using ShippingService.Infrastructure.Repositories;
 using ShippingService.Infrastructure.Services;
+using ShippingService.Models;
 using ShippingService.Repositories;
 using ShippingService.Services;
 using System;
@@ -69,6 +70,8 @@ namespace ShippingService
 
 			var dbContext = serviceProvider.GetService<ShippingDbContext>();
 
+			SetupAutoMapper();
+
 			//Policy
 			//    .Handle<Exception>()
 			//    .WaitAndRetry(5, r => TimeSpan.FromSeconds(5),
@@ -100,6 +103,9 @@ namespace ShippingService
 			{
 				cfg.CreateMap<ShipOrder, OrderShipped>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+				cfg.CreateMap<Package, PackageRegistered>();
+				cfg.CreateMap<PackageRegistered, Package>()
+					.ForCtorParam("transport", opt => opt.ResolveUsing(c => c.Transport.TransportId)); ;
 			});
 		}
 

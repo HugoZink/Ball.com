@@ -32,7 +32,7 @@ namespace ShippingService
 			{
 				case MessageTypes.Unknown:
 					break;
-				case MessageTypes.OrderPackeged:
+				case MessageTypes.PackageRegistered:
 					await HandlePackageOrdersAsync(messageObject.ToObject<PackageRegistered>());
 					break;
 				case MessageTypes.DayHasBegun:
@@ -83,7 +83,7 @@ namespace ShippingService
 			Package package = Mapper.Map<Package>(e);
 
 			await _packageRepository.AddPackageAsync(package);
-			Console.WriteLine($"Package added: " + e);
+			Console.WriteLine($"Package added: " + e.PackageId);
 			return true;
 		}
 	}
