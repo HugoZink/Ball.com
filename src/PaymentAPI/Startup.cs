@@ -68,17 +68,6 @@ namespace PaymentAPI
 			{
 				app.UseDeveloperExceptionPage();
 			}
-
-			// setup messagehandler
-			var configSection = Configuration.GetSection("RabbitMQ");
-			string host = configSection["Host"];
-			string userName = configSection["UserName"];
-			string password = configSection["Password"];
-			RabbitMQMessageHandler messageHandler = new RabbitMQMessageHandler(host, userName, password, "Ball.com", "PaymentAPI", "");
-
-			// start event-handler
-			var eventHandler = new EventHandler(messageHandler);
-			eventHandler.Start();
 		}
     }
 }
