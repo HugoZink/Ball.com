@@ -51,6 +51,10 @@
 		OrderDeleted,
 		OrderPlaced,
 
+		// Payment Commands and Events
+		PayOrder,
+		OrderPayed,
+
 		// Time Events
 		DayHasPassed,
 	}

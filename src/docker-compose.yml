@@ -67,6 +67,18 @@ services:
         # environment:
             # ASPNETCORE_ENVIRONMENT: Production
             # ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+    paymentapi:
+        image: 'pitstop/paymentapi:latest'
+        build:
+            context: ./
+            dockerfile: Dockerfile.payment
+        container_name: paymentapi
+        depends_on:
+            - rabbitmq
+        ports:
+            - '5900:5900'
+        environment:
+            ASPNETCORE_ENVIRONMENT: Production
 
     # productmanagementapi:
         # image: pitstop/productmanagementapi:latest
