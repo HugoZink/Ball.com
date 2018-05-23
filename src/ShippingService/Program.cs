@@ -49,7 +49,7 @@ namespace ShippingService
 			//...add any other services needed
 			//services.AddTransient<IProductRepository, ProductRepository>();
 			//services.AddTransient<ICustomerRepository, CustomerRepository>();
-			//services.AddTransient<IOrderRepository, OrderRepository>();
+			services.AddTransient<IOrderRepository, EFOrderRepository>();
 			//services.AddTransient<ILogisticsRepository, LogisticsRepository>();
 			services.AddTransient<IPackageRepository, EFPackageRepository>();
 
@@ -65,10 +65,12 @@ namespace ShippingService
 			// then build provider 
 			var serviceProvider = services.BuildServiceProvider();
 
-			var messageHandlerCallback = serviceProvider.GetService<IMessageHandlerCallback>();
-			var messageHandler = serviceProvider.GetService<IMessageHandler>();
+			//var messageHandlerCallback = serviceProvider.GetService<IMessageHandlerCallback>();
+			RabbitMQMessageHandler messageHandler = new RabbitMQMessageHandler(host, userName, password, "Ball.com", "OrderAPI", "");
 
 			var dbContext = serviceProvider.GetService<ShippingDbContext>();
+			var messagePublisher = serviceProvider.GetService<IMessagePublisher>();
+			var logisticsService = serviceProvider.GetService<ILogisticsService>();
 
 			SetupAutoMapper();
 
@@ -78,7 +80,9 @@ namespace ShippingService
 			//        (ex, ts) => { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
 			//    .Execute(() => dbContext.Database.Migrate());
 
-			messageHandler.Start(messageHandlerCallback);
+			// start event-handler
+			var eventHandler = new EventHandler(messagePublisher, messageHandler, logisticsService, Config.GetConnectionString("ShippingCN"));
+			eventHandler.Start();
 
 			if (Env == "Development")
 			{
@@ -104,6 +108,7 @@ namespace ShippingService
 				cfg.CreateMap<ShipOrder, OrderShipped>()
 					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
 				cfg.CreateMap<Package, PackageRegistered>();
+				cfg.CreateMap<Order, OrderShipped>();
 				cfg.CreateMap<PackageRegistered, Package>()
 					.ForCtorParam("transport", opt => opt.ResolveUsing(c => c.Transport.TransportId)); ;
 			});

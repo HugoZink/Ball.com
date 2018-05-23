@@ -8,6 +8,13 @@ namespace ShippingService.Models
     {
 		public string OrderId { get; set; }
 
+		public string PackageId { get; set; }
+
 		public string TrackingCode { get; set; }
+
+		public Order()
+		{
+
+		}
 	}
 }

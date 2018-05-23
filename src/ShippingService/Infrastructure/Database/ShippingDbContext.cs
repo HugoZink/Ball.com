@@ -12,6 +12,7 @@ namespace ShippingService.Infrastructure.Database
 		}
 
 		public DbSet<Package> Package { get; set; }
+		public DbSet<Order> Order { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

@@ -82,17 +82,17 @@ services:
     #     environment:
     #         ASPNETCORE_ENVIRONMENT: Production
     #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
-     shippingservice:
-           image: 'pitstop/shippingservice:latest'
-           build:
-                context: ./
-                dockerfile: Dockerfile.shipping
-           container_name: shippingservice
-           depends_on:
-                - rabbitmq
-                - sqlserver
-           environment:
-                ASPNETCORE_ENVIRONMENT: Production
+    # shippingservice:
+          # image: 'pitstop/shippingservice:latest'
+          # build:
+               # context: ./
+               # dockerfile: Dockerfile.shipping
+          # container_name: shippingservice
+          # depends_on:
+               # - rabbitmq
+               # - sqlserver
+          # environment:
+               # ASPNETCORE_ENVIRONMENT: Production
     # paymentapi:
     #     image: 'pitstop/paymentapi:latest'
     #     build:
