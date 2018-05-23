@@ -24,31 +24,31 @@ namespace LogisticsManagementAPI.DataAccess
                 var transports = new Transport[]
                 {
                     new Transport { CompanyName = "PostNL", TypeOfShipment = "Package",
-                        CountryOfDestination = "Netherlands", Description = "Letterbox package", WeightInKgMax = 2,
+                        CityOfDestination = "ROTTERDAM", Description = "Letterbox package", WeightInKgMax = 2,
                         ShippingCost = 3.80m},
                     new Transport { CompanyName = "PostNL", TypeOfShipment = "Package",
-                        CountryOfDestination = "Netherlands", Description = "Package", WeightInKgMax = 2,
+                        CityOfDestination = "ROTTERDAM", Description = "Package", WeightInKgMax = 2,
                         ShippingCost = 6.50m},
 
                     new Transport { CompanyName = "PostNL", TypeOfShipment = "Package",
-                        CountryOfDestination = "Netherlands", Description = "Package", WeightInKgMax = 5,
+                        CityOfDestination = "ROTERDAM", Description = "Package", WeightInKgMax = 5,
                         ShippingCost = 6.50m},
                     new Transport { CompanyName = "PostNL", TypeOfShipment = "Package",
-                        CountryOfDestination = "Netherlands", Description = "Package registered", WeightInKgMax = 5,
+                        CityOfDestination = "ROTTERDAM", Description = "Package registered", WeightInKgMax = 5,
                         ShippingCost = 8.15m},
 
                     new Transport { CompanyName = "PostNL", TypeOfShipment = "Package",
-                        CountryOfDestination = "Netherlands", Description = "Package with insurance", WeightInKgMax = 10,
+                        CityOfDestination = "ROTTERDAM", Description = "Package with insurance", WeightInKgMax = 10,
                         ShippingCost = 14.45m},
                     new Transport { CompanyName = "PostNL", TypeOfShipment = "Package",
-                        CountryOfDestination = "Netherlands", Description = "Package with payment", WeightInKgMax = 10,
+                        CityOfDestination = "ROTTERDAM", Description = "Package with payment", WeightInKgMax = 10,
                         ShippingCost = 18.35m},
 
                     new Transport { CompanyName = "PostNL", TypeOfShipment = "Package",
-                        CountryOfDestination = "Netherlands", Description = "Package with urgent (12 hours)", WeightInKgMax = 20,
+                        CityOfDestination = "ROTTERDAM", Description = "Package with urgent (12 hours)", WeightInKgMax = 20,
                         ShippingCost = 30.45m},
                     new Transport { CompanyName = "PostNL", TypeOfShipment = "Package",
-                        CountryOfDestination = "Netherlands", Description = "Package with urgent (10 hours)", WeightInKgMax = 20,
+                        CityOfDestination = "ROTTERDAM", Description = "Package with urgent (10 hours)", WeightInKgMax = 20,
                         ShippingCost = 42.95m},
                 };
 

@@ -24,49 +24,77 @@ services:
             RABBITMQ_DEFAULT_PASS: DEBmbwkSrzy9D1T9cJfa
 
     # customermanagementapi:
-        # image: pitstop/customermanagementapi:latest
-        # build:
-          # context: ./
-          # dockerfile: Dockerfile.customermanagement
-        # container_name: customermanagementapi
-        # depends_on:
-          # - rabbitmq
-          # - sqlserver
-        # ports:
-          # - "5100:5100"
-        # environment:
-          # - ASPNETCORE_ENVIRONMENT=Production
-          # - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
+    #     image: pitstop/customermanagementapi:latest
+    #     build:
+    #       context: ./
+    #       dockerfile: Dockerfile.customermanagement
+    #     container_name: customermanagementapi
+    #     depends_on:
+    #       - rabbitmq
+    #       - sqlserver
+    #     ports:
+    #       - "5100:5100"
+    #     environment:
+    #       - ASPNETCORE_ENVIRONMENT=Production
+    #       - ApplicationInsights:InstrumentationKey=${PitStopAIKey}
 
     # logisticsmanagementapi:
-        # image: 'pitstop/logisticsmanagementapi:latest'
-        # build: 
-            # context: ./
-            # dockerfile: Dockerfile.logistics
-        # container_name: logisticsmanagementapi
-        # depends_on:
-            # - rabbitmq
-            # - sqlserver
-        # ports:
-            # - '5300:5300'
-        # environment:
-            # ASPNETCORE_ENVIRONMENT: Production
-            # ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+    #     image: 'pitstop/logisticsmanagementapi:latest'
+    #     build: 
+    #         context: ./
+    #         dockerfile: Dockerfile.logistics
+    #     container_name: logisticsmanagementapi
+    #     depends_on:
+    #         - rabbitmq
+    #         - sqlserver
+    #     ports:
+    #         - '5300:5300'
+    #     environment:
+    #         ASPNETCORE_ENVIRONMENT: Production
+    #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
             
     # orderapi:
-        # image: 'pitstop/orderapi:latest'
-        # build: 
-            # context: ./
-            # dockerfile: Dockerfile.orders
-        # container_name: orderapi
-        # depends_on:
-            # - rabbitmq
-            # - sqlserver
-        # ports:
-            # - '5600:5600'
-        # environment:
-            # ASPNETCORE_ENVIRONMENT: Production
-            # ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+    #     image: 'pitstop/orderapi:latest'
+    #     build: 
+    #         context: ./
+    #         dockerfile: Dockerfile.orders
+    #     container_name: orderapi
+    #     depends_on:
+    #         - rabbitmq
+    #         - sqlserver
+    #     ports:
+    #         - '5600:5600'
+    #     environment:
+    #         ASPNETCORE_ENVIRONMENT: Production
+    #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+
+    # warehousemanagementapi:
+    #     image: 'pitstop/warehousemanagementapi:latest'
+    #     build: 
+    #         context: ./
+    #         dockerfile: Dockerfile.warehouse
+    #     container_name: warehousemanagementapi
+    #     depends_on:
+    #         - rabbitmq
+    #         - sqlserver
+    #     ports:
+    #         - '5700:5700'
+    #     environment:
+    #         ASPNETCORE_ENVIRONMENT: Production
+    #         ApplicationInsights: 'InstrumentationKey=$${PitStopAIKey}'
+
+    # paymentapi:
+    #     image: 'pitstop/paymentapi:latest'
+    #     build:
+    #         context: ./
+    #         dockerfile: Dockerfile.payment
+    #     container_name: paymentapi
+    #     depends_on:
+    #         - rabbitmq
+    #     ports:
+    #         - '5900:5900'
+    #     environment:
+    #         ASPNETCORE_ENVIRONMENT: Production
 
     # productmanagementapi:
         # image: pitstop/productmanagementapi:latest
@@ -81,17 +109,7 @@ services:
            # - "5500:5500"
         # environment:
            # - ASPNETCORE_ENVIRONMENT=Production
-    # shippingservice:
-        # image: 'pitstop/shippingservice:latest'
-        # build:
-            # context: ./
-            # dockerfile: Dockerfile.shipping
-        # container_name: shippingservice
-        # depends_on:
-            # - rabbitmq
-            # - sqlserver
-        # environment:
-            # ASPNETCORE_ENVIRONMENT: Production
+
     # auditlogservice:
     #     image: 'pitstop/auditlogservice:latest'
     #     build: AuditlogService

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LogisticsManagementAPI.Events
+namespace WarehouseManagementAPI.Events
 {
-    public class TransportUpdated : Event
+    public class TransportRegistered : Event
     {
         public readonly string TransportId;
         public readonly string CompanyName;
@@ -16,9 +16,9 @@ namespace LogisticsManagementAPI.Events
         public readonly decimal WeightInKgMax;
         public readonly decimal ShippingCost;
 
-        public TransportUpdated(Guid messageId, string transportId, string companyName, string typeOfShipment,
-            string cityOfDestination, string description, decimal weightInKgMax,
-            decimal shippingCost) : base(messageId, MessageTypes.TransportUpdated)
+        public TransportRegistered(Guid messageId, string transportId, string companyName,
+            string typeOfShipment, string cityOfDestination, string description,
+            decimal weightInKgMax, decimal shippingCost) : base(messageId, MessageTypes.TransportRegistered)
         {
             TransportId = transportId;
             CompanyName = companyName;

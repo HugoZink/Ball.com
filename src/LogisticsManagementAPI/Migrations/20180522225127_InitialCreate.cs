@@ -13,8 +13,8 @@ namespace LogisticsManagementAPI.Migrations
                 columns: table => new
                 {
                     TransportId = table.Column<string>(nullable: false),
+                    CityOfDestination = table.Column<string>(nullable: true),
                     CompanyName = table.Column<string>(nullable: true),
-                    CountryOfDestination = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ShippingCost = table.Column<decimal>(nullable: false),
                     TypeOfShipment = table.Column<string>(nullable: true),

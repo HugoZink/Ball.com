@@ -25,9 +25,9 @@ namespace LogisticsManagementAPI.Migrations
                     b.Property<string>("TransportId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CompanyName");
+                    b.Property<string>("CityOfDestination");
 
-                    b.Property<string>("CountryOfDestination");
+                    b.Property<string>("CompanyName");
 
                     b.Property<string>("Description");
 

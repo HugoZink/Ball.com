@@ -16,8 +16,8 @@ namespace LogisticsManagementAPI.Controllers
     [Route("api/[controller]")]
     public class TransportsController : Controller
     {
-        IMessagePublisher _messagePublisher;
-        LogisticsManagementDbContext _dbContext;
+        public IMessagePublisher _messagePublisher;
+        public LogisticsManagementDbContext _dbContext;
 
         public TransportsController(LogisticsManagementDbContext dbContext, IMessagePublisher messagePublisher)
         {
@@ -74,22 +74,23 @@ namespace LogisticsManagementAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Transport transport = Mapper.Map<Transport>(command);
-                transport = await _dbContext.Transports.FirstOrDefaultAsync(t => t.TransportId == transportId);
+                //Transport transport = Mapper.Map<Transport>(command);
+                var transport = await _dbContext.Transports.FirstOrDefaultAsync(t => t.TransportId == transportId);
 
                 if (transport != null)
                 {
                     // Update Transport
                     transport.CompanyName = command.CompanyName;
                     transport.TypeOfShipment = command.TypeOfShipment;
-                    transport.CountryOfDestination = command.CountryOfDestination;
+                    transport.CityOfDestination = command.CityOfDestination;
                     transport.Description = command.Description;
                     transport.WeightInKgMax = command.WeightInKgMax;
                     transport.ShippingCost = command.ShippingCost;
                     await _dbContext.SaveChangesAsync();
 
                     // Send Event
-                    TransportUpdated e = Mapper.Map<TransportUpdated>(command);
+                    UpdateTransport c = Mapper.Map<UpdateTransport>(transport);
+                    TransportUpdated e = Mapper.Map<TransportUpdated>(c);
                     await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
                     return CreatedAtRoute("GetTransportById", new { transportId = transport.TransportId }, transport);
@@ -105,10 +106,7 @@ namespace LogisticsManagementAPI.Controllers
         [HttpDelete("{transportId}")]
         public async Task<IActionResult> DeleteAsync(string transportId)
         {
-            RemoveTransport command = new RemoveTransport(Guid.Empty, transportId);
-
-            Transport transport = Mapper.Map<Transport>(command);
-            transport = await _dbContext.Transports.FirstOrDefaultAsync(t => t.TransportId == transportId);
+            var transport = await _dbContext.Transports.FirstOrDefaultAsync(t => t.TransportId == transportId);
 
             if (transport != null)
             {
@@ -118,7 +116,8 @@ namespace LogisticsManagementAPI.Controllers
                 await _dbContext.SaveChangesAsync();
 
                 // Send Event
-                TransportRemoved e = Mapper.Map<TransportRemoved>(command);
+                RemoveTransport c = Mapper.Map<RemoveTransport>(transport);
+                TransportRemoved e = Mapper.Map<TransportRemoved>(c);
                 await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
                 return CreatedAtRoute("GetTransportById", new { transportId = transport.TransportId }, transport);

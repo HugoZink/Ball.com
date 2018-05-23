@@ -42,7 +42,7 @@ namespace LogisticsManagementAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add DbContext classes
+            // Add dbcontext Classes
             var sqlConnectionString = Configuration.GetConnectionString("LogisticsManagementCN");
             services.AddDbContext<LogisticsManagementDbContext>(options =>
                 options.UseSqlServer(sqlConnectionString));
@@ -87,11 +87,8 @@ namespace LogisticsManagementAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "LogisticsManagement API - v1");
             });
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
+            // Setup Seed data
+            // (NOTE: Comment this code when adding a new migration in a empty folder)
             Policy
                 .Handle<Exception>()
                 .WaitAndRetry(10, r => TimeSpan.FromSeconds(5))
@@ -99,11 +96,16 @@ namespace LogisticsManagementAPI
                 {
                     dbInit.Seed().Wait();
                 });
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
         }
 
         private void SetupAutoMapper()
         {
-            // setup automapper
+            // Setup automapper
             Mapper.Initialize(cfg =>
             {
                 // Map CRUD Commands and Events
