@@ -55,8 +55,8 @@ namespace Pitstop.Application.VehicleManagement.Controllers
                     await _dbContext.SaveChangesAsync();
 
                     // send event
-                    CustomerRegistered e = Mapper.Map<CustomerRegistered>(command);
-                    await _messagePublisher.PublishMessageAsync(e.MessageType, e , "");
+                    CustomerRegistered e = Mapper.Map<CustomerRegistered>(customer);
+                    await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
                     // return result
                     return CreatedAtRoute("GetByCustomerId", new { customerId = customer.CustomerId }, customer);
@@ -72,46 +72,46 @@ namespace Pitstop.Application.VehicleManagement.Controllers
             }
         }
 
-		[HttpPost]
-		[Route("{customerId}/supportmessages", Name = "SendMessage")]
-		public async Task<IActionResult> SendMessageAsync(string customerId, [FromBody] SendSupportMessage command)
-		{
-			try
-			{
-				if(!ModelState.IsValid)
-				{
-					return BadRequest();
-				}
+        [HttpPost]
+        [Route("{customerId}/supportmessages", Name = "SendMessage")]
+        public async Task<IActionResult> SendMessageAsync(string customerId, [FromBody] SendSupportMessage command)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
 
-				var customer = await _dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
-				if (customer == null)
-				{
-					return NotFound();
-				}
+                var customer = await _dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
+                if (customer == null)
+                {
+                    return NotFound();
+                }
 
-				if(customer.SupportMessages == null)
-				{
-					customer.SupportMessages = new List<SupportMessage>();
-				}
+                if (customer.SupportMessages == null)
+                {
+                    customer.SupportMessages = new List<SupportMessage>();
+                }
 
-				SupportMessage message = Mapper.Map<SupportMessage>(command);
-				customer.SupportMessages.Add(message);
-				await _dbContext.SaveChangesAsync();
+                SupportMessage message = Mapper.Map<SupportMessage>(command);
+                customer.SupportMessages.Add(message);
+                await _dbContext.SaveChangesAsync();
 
-				// send event
-				SupportMessageSent e = Mapper.Map<SupportMessageSent>(command);
-				await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
+                // send event
+                SupportMessageSent e = Mapper.Map<SupportMessageSent>(command);
+                await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
-				// return result
-				return CreatedAtRoute("GetByCustomerId", new { customerId = customer.CustomerId }, customer);
-			}
-			catch (DbUpdateException)
-			{
-				ModelState.AddModelError("", "Unable to save changes. " +
-					"Try again, and if the problem persists " +
-					"see your system administrator.");
-				return StatusCode(StatusCodes.Status500InternalServerError);
-			}
-		}
+                // return result
+                return CreatedAtRoute("GetByCustomerId", new { customerId = customer.CustomerId }, customer);
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

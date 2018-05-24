@@ -120,11 +120,11 @@ namespace LogisticsManagementAPI
                 cfg.CreateMap<Transport, RemoveTransport>()
                     .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
 
-                cfg.CreateMap<RegisterTransport, TransportRegistered>()
+                cfg.CreateMap<Transport, TransportRegistered>()
                     .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
-                cfg.CreateMap<UpdateTransport, TransportUpdated>()
+                cfg.CreateMap<Transport, TransportUpdated>()
                     .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
-                cfg.CreateMap<RemoveTransport, TransportRemoved>()
+                cfg.CreateMap<Transport, TransportRemoved>()
                     .ForCtorParam("messageId", opt => opt.ResolveUsing(t => Guid.NewGuid()));
             });
         }
