@@ -62,7 +62,7 @@ namespace ProductManagementAPI.Controllers
             var newP = await _productRepository.CreateAsync(product);
 
             // send event
-            NewProductAdded e = Mapper.Map<NewProductAdded>(product);
+            NewProductAdded e = Mapper.Map<NewProductAdded>(newP);
             await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
             // return result
