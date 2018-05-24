@@ -59,7 +59,7 @@ namespace LogisticsManagementAPI.Controllers
                 await _dbContext.SaveChangesAsync();
 
                 // Send Event
-                TransportRegistered e = Mapper.Map<TransportRegistered>(command);
+                TransportRegistered e = Mapper.Map<TransportRegistered>(transport);
                 await _messagePublisher.PublishMessageAsync(e.MessageType, e, "");
 
                 return CreatedAtRoute("GetTransportById", new { transportId = transport.TransportId }, transport);

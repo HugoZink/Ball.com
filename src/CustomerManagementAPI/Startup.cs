@@ -45,7 +45,7 @@ namespace Pitstop.CustomerManagementAPI
 
             // Add framework services.
             services.AddMvc();
-            
+
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -84,7 +84,7 @@ namespace Pitstop.CustomerManagementAPI
                 cfg.CreateMap<RegisterCustomer, Customer>();
                 cfg.CreateMap<Customer, RegisterCustomer>()
                     .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
-                cfg.CreateMap<RegisterCustomer, CustomerRegistered>()
+                cfg.CreateMap<Customer, CustomerRegistered>()
                     .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
             });
         }

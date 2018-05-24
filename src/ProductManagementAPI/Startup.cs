@@ -18,95 +18,93 @@ using System;
 
 namespace ProductManagementAPI
 {
-	public class Startup
-	{
-		public Startup(IHostingEnvironment env)
-		{
-			var builder = new ConfigurationBuilder()
-				.SetBasePath(env.ContentRootPath)
-				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-				.AddEnvironmentVariables();
-			Configuration = builder.Build();
-		}
+    public class Startup
+    {
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
+        }
 
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-		public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services)
-		{
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
 
-			// add DBContext classes
-			var sqlConnectionString = Configuration.GetConnectionString("ProductManagementCN");
-			services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(sqlConnectionString));
+            // add DBContext classes
+            var sqlConnectionString = Configuration.GetConnectionString("ProductManagementCN");
+            services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(sqlConnectionString));
 
-			// add messagepublisher classes
-			var configSection = Configuration.GetSection("RabbitMQ");
-			string host = configSection["Host"];
-			string userName = configSection["UserName"];
-			string password = configSection["Password"];
-			services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
-			services.AddTransient<IProductRepository, EFProductRepository>();
+            // add messagepublisher classes
+            var configSection = Configuration.GetSection("RabbitMQ");
+            string host = configSection["Host"];
+            string userName = configSection["UserName"];
+            string password = configSection["Password"];
+            services.AddTransient<IMessagePublisher>((sp) => new RabbitMQMessagePublisher(host, userName, password, "Ball.com"));
+            services.AddTransient<IProductRepository, EFProductRepository>();
 
-			services.AddMvc();
+            services.AddMvc();
 
-			// Register the Swagger generator, defining one or more Swagger documents
-			services.AddSwaggerGen(c =>
-			{
-				c.SwaggerDoc("v1", new Info { Title = "ProductManagement API", Version = "v1" });
-			});
-		}
+            // Register the Swagger generator, defining one or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "ProductManagement API", Version = "v1" });
+            });
+        }
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProductDbContext context)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProductDbContext context)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
-			app.UseMvc();
+            app.UseMvc();
 
 
-			SetupAutoMapper();
+            SetupAutoMapper();
 
-			// Enable middleware to serve generated Swagger as a JSON endpoint.
-			app.UseSwagger();
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
 
-			// Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
-			app.UseSwaggerUI(c =>
-			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductManagement API - v1");
-			});
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductManagement API - v1");
+            });
 
-			Policy
-				.Handle<Exception>()
-				.WaitAndRetry(10, r => TimeSpan.FromSeconds(10))
-				.Execute(() =>
-				{
-					ProductDbSeeder.Seed(context);
-				});
-		}
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(10, r => TimeSpan.FromSeconds(10))
+                .Execute(() =>
+                {
+                    ProductDbSeeder.Seed(context);
+                });
+        }
 
-		private void SetupAutoMapper()
-		{
-			// setup automapper
-			Mapper.Initialize(cfg =>
-			{
-				cfg.CreateMap<AddProduct, Product>();
-				cfg.CreateMap<UpdateProduct, Product>();
-				cfg.CreateMap<AddProduct, NewProductAdded>()
-					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
-				cfg.CreateMap<UpdateProduct, ProductUpdated>()
-					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
-				cfg.CreateMap<UpdateProduct, ProductUpdated>()
-					.ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
-			});
-		}
-	}
+        private void SetupAutoMapper()
+        {
+            // setup automapper
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<AddProduct, Product>();
+                cfg.CreateMap<UpdateProduct, Product>();
+                cfg.CreateMap<Product, NewProductAdded>()
+                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+                cfg.CreateMap<Product, ProductUpdated>()
+                    .ForCtorParam("messageId", opt => opt.ResolveUsing(c => Guid.NewGuid()));
+            });
+        }
+    }
 }
