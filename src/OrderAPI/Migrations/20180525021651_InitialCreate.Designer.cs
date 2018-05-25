@@ -6,14 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using OrderAPI.DataAccess;
-using OrderAPI.Model;
 using System;
 
 namespace OrderAPI.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20180520140946_OrderVirtualGetterFix")]
-    partial class OrderVirtualGetterFix
+    [Migration("20180525021651_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,11 +48,11 @@ namespace OrderAPI.Migrations
                     b.Property<string>("OrderId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("AfterPayment");
+
                     b.Property<string>("CustomerId");
 
                     b.Property<DateTime>("DateTime");
-
-                    b.Property<int>("State");
 
                     b.Property<string>("TrackingCode");
 
@@ -79,6 +78,24 @@ namespace OrderAPI.Migrations
                     b.ToTable("OrderProduct");
                 });
 
+            modelBuilder.Entity("OrderAPI.Model.OrderStateChange", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("OrderId");
+
+                    b.Property<string>("State");
+
+                    b.Property<int>("Version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderStateChange");
+                });
+
             modelBuilder.Entity("OrderAPI.Model.Product", b =>
                 {
                     b.Property<string>("ProductId")
@@ -88,7 +105,7 @@ namespace OrderAPI.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<float>("WeightKg");
+                    b.Property<decimal>("WeightKg");
 
                     b.HasKey("ProductId");
 
@@ -110,9 +127,16 @@ namespace OrderAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("OrderAPI.Model.Product", "Product")
-                        .WithMany()
+                        .WithMany("OrderProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("OrderAPI.Model.OrderStateChange", b =>
+                {
+                    b.HasOne("OrderAPI.Model.Order")
+                        .WithMany("StateChanges")
+                        .HasForeignKey("OrderId");
                 });
 #pragma warning restore 612, 618
         }

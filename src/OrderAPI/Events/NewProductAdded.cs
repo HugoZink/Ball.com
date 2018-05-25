@@ -8,17 +8,18 @@ namespace OrderAPI.Events
 {
     public class NewProductAdded : Event
     {
-		public readonly string ProductId;
-		public readonly string Name;
-		public readonly decimal Price;
-		public readonly decimal WeightKg;
+        public readonly string Id;
+        public readonly string Name;
+        public readonly decimal Price;
+        public readonly decimal WeightKg;
 
-		public NewProductAdded(Guid messageId, string productId, string name, decimal price, decimal weightKg) : base(messageId, MessageTypes.NewProductAdded)
-		{
-			ProductId = productId;
-			Name = name;
-			Price = price;
-			WeightKg = weightKg;
-		}
-	}
+        public NewProductAdded(Guid messageId, string id, string name, decimal price, decimal weightKg) :
+            base(messageId, MessageTypes.NewProductAdded)
+        {
+            Id = id;
+            Name = name;
+            Price = price;
+            WeightKg = weightKg;
+        }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace OrderAPI.Model
 
         public List<OrderStateChange> StateChanges { get; set; }
 
+        [JsonIgnore]
         public List<OrderProduct> OrderProducts { get; set; }
 
         public bool AfterPayment { get; set; }
