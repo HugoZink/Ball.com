@@ -57,8 +57,8 @@ namespace OrderAPI.Controllers
         }
 
         [HttpPost]
-        [Route("{orderId}", Name = "AddProductToOrder")]
-        public async Task<IActionResult> AddProductToOrder(string orderId, [FromBody] string productId, [FromBody] int quantity)
+        [Route("{orderId}/Products/{productId}", Name = "AddProductToOrder")]
+        public async Task<IActionResult> AddProductToOrder(string orderId, string productId, [FromBody] int quantity)
         {
             var order = await _dbContext.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
             if (order == null)
@@ -79,6 +79,7 @@ namespace OrderAPI.Controllers
             orderProduct.Quantity = quantity;
 
             order.OrderProducts.Add(orderProduct);
+            order.AddStateChange(OrderState.PENDING);
             await _dbContext.SaveChangesAsync();
 
             return AcceptedAtRoute("GetByOrderId", new { orderId = order.OrderId }, order);

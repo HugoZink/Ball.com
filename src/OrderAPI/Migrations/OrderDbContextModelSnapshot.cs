@@ -126,7 +126,7 @@ namespace OrderAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("OrderAPI.Model.Product", "Product")
-                        .WithMany()
+                        .WithMany("OrderProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
